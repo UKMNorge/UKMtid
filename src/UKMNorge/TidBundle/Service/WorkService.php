@@ -132,6 +132,6 @@ class WorkService {
 
 		$em->flush();
 		## WHEN DONE
-		$this->options->set('holiday_loaded_'.$year, true);
+		#$this->options->set('holiday_loaded_'.$year, true);
 	}	
 }

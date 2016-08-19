@@ -40,7 +40,7 @@ class UserController extends Controller
     	$data['interval'] = $interval;
     	return $this->render('UKMTidBundle:User:stop.html.twig', $data);
     }
-    
+
     /**
      * @Route("/stop/", name="ukm_tid_stop", requirements={"interval_id": "\d+", "day": "\d+", "month": "\d+", "hour": "\d+", "minute": "\d+"})
      * @Method({"POST"})

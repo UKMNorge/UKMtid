@@ -4,6 +4,8 @@ namespace UKMNorge\TidBundle\Entity;
 
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\OneToMany;
+use Doctrine\ORM\ManyToOne;
 
 /**
  * User
@@ -25,17 +27,29 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
      */
     private $name;
 
     /**
      * @var int
      *
+     * Stillingsprosent.
+     *
      * @ORM\Column(name="percentage", type="integer", nullable=true)
      */
     private $percentage;
 
+    /** 
+     * @ORM\OneToMany(targetEntity="Month", mappedBy="user")
+     */
+    private $months;
+
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="Department", inversedBy="members")
+     */    
+    private $department;
 
     /**
      * Get id
@@ -72,27 +86,23 @@ class User extends BaseUser
     }
 
     /**
-     * Set departmentManager
-     *
-     * @param string $departmentManager
-     *
-     * @return User
+     * Promote/demote via FOSUserBundle Console commands
      */
-    public function setDepartmentManager($departmentManager)
-    {
-        $this->departmentManager = $departmentManager;
-
-        return $this;
+    public function isDepartmentManager() {
+        if(in_array('ROLE_ADMIN', $this->roles)) {
+            return true;
+        }
+        return false;
     }
 
     /**
-     * Get departmentManager
-     *
-     * @return string
+     * Promote/demote via FOSUserBundle Console commands
      */
-    public function getDepartmentManager()
-    {
-        return $this->departmentManager;
+    public function isSuperUser() {
+        if(in_array('ROLE_SUPER_ADMIN', $this->roles)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -117,29 +127,5 @@ class User extends BaseUser
     public function getPercentage()
     {
         return $this->percentage;
-    }
-
-    /**
-     * Set role
-     *
-     * @param string $role
-     *
-     * @return User
-     */
-    public function setRole($role)
-    {
-        $this->role = $role;
-
-        return $this;
-    }
-
-    /**
-     * Get role
-     *
-     * @return string
-     */
-    public function getRole()
-    {
-        return $this->role;
     }
 }

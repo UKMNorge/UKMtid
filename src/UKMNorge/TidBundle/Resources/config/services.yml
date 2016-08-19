@@ -22,5 +22,9 @@ services:
         class: UKMNorge\TidBundle\Service\IntervalService
         arguments: ["@doctrine", "@UKM.month", "@UKM.format"]
 
+    UKM.department:
+        class: UKMNorge\TidBundle\Service\DepartmentService
+        arguments: ["@doctrine"]
+
     # UKM.holiday:
     #     class: UKMNorge\TidBundle\TidBundle\HolidayService

@@ -4,6 +4,8 @@ namespace UKMNorge\TidBundle\Entity;
 
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\OneToMany;
+use Doctrine\ORM\ManyToOne;
 
 /**
  * User
@@ -42,6 +44,12 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="Month", mappedBy="user")
      */
     private $months;
+
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="Department", inversedBy="members")
+     */    
+    private $department;
 
     /**
      * Get id
@@ -119,5 +127,63 @@ class User extends BaseUser
     public function getPercentage()
     {
         return $this->percentage;
+    }
+
+    /**
+     * Add month
+     *
+     * @param \UKMNorge\TidBundle\Entity\Month $month
+     *
+     * @return User
+     */
+    public function addMonth(\UKMNorge\TidBundle\Entity\Month $month)
+    {
+        $this->months[] = $month;
+
+        return $this;
+    }
+
+    /**
+     * Remove month
+     *
+     * @param \UKMNorge\TidBundle\Entity\Month $month
+     */
+    public function removeMonth(\UKMNorge\TidBundle\Entity\Month $month)
+    {
+        $this->months->removeElement($month);
+    }
+
+    /**
+     * Get months
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMonths()
+    {
+        return $this->months;
+    }
+
+    /**
+     * Set department
+     *
+     * @param \UKMNorge\TidBundle\Entity\Department $department
+     *
+     * @return User
+     */
+    public function setDepartment(\UKMNorge\TidBundle\Entity\Department $department = null)
+    {
+        $this->department = $department;
+
+        return $this;
+    }
+
+    /**
+     * Get department
+     *
+     * @return \UKMNorge\TidBundle\Entity\Department
+     */
+    public function getDepartment()
+    {
+        return $this->department;
     }
 }

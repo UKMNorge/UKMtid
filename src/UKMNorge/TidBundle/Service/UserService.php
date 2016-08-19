@@ -45,6 +45,25 @@ class UserService {
 		return $user;
 	}
 	
+	public function getMyEmployees( $leader ) {
+		$dServ = $this->container->get('UKM.department');
+		
+		$employees = array();
+
+		if( $leader->isSuperUser() ) {
+			// List all departments as well
+			$deps = $dServ->getDepartments();
+			for ($deps as $dep) {
+				$employees[] = ($dep->getMembers());
+			}
+		} else if ($leader->isDepartmentManager() ) {
+			$dep = $dServ->getDepartment($leader);
+			$employees[] = $dep->getMembers();
+		}
+
+		return $employees;
+	}
+
 	public function getCurrent() {
 		return $this->container->get('security.token_storage')->getToken()->getUser();
 	}
