@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% if manifest is defined and manifest %}
+	<html manifest="{{ url('jhbhtml_manifest') }}">
+{% else %}
+<html>
+{% endif %}
+	<head>
+		<meta charset="UTF-8">
+		<title>MereMatSaMarius (Hungry.FYI)</title>
+	</head>
+	<script src="{{ asset('js/jquery-3.0.0.js') }}"></script>
+	<script src="{{ asset('js/jquery-ui.min.js') }}"></script>
+	<script src="{{ asset('js/string.replaceAll.js') }}"></script>
+		
+	<script language="javascript" type="text/javascript">
+	/* HOLD APPEN SOM APP */
+	$("a").click(function (event) {
+		event.preventDefault();
+		window.location = $(this).attr("href");
+	});
+	$(document).on('click', 'a', function(event){
+		event.preventDefault();
+		window.location = $(this).attr('href');
+	});
+	</script>
+	
+	<link rel="stylesheet" href="{{ asset('css/bootstrap-v4.0.0.alpha2.css') }}" />
+	<link rel="stylesheet" href="{{ asset('css/jquery-ui.min.css') }}" />
+	<link rel="stylesheet" href="{{ asset('css/jquery-ui.theme.min.css') }}" />
+		
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	
+	<link rel="stylesheet" href="{{ asset('css/bootstrap-v4.0.0.alpha2.css') }}" />
+
+	<body class="background-dark">
+		<header class="navbar navbar-fixed-top navbar-dark bg-inverse">
+			<h2>{% block header %}UKMtid{% endblock %}</h2>
+		</header>
+		<div class="clearfix"></div>
+		<p class="m-y-2">&nbsp;</p>
+		<div class="clearfix"></div>
+		
+		{% embed "UKMTidBundle::flashMessages.html.twig" %}{% endembed %}
+		
+		{% block content %}{% endblock %}
+		
+		<div class="clearfix"></div>
+		<p class="m-y-2">&nbsp;</p>
+		<nav class="navbar navbar-fixed-bottom navbar-light bg-faded">
+			<a class="navbar-brand" href="{{ url( 'ukm_tid_register' ) }}">REGISTRER</a>
+			<a class="navbar-brand" href="{{ url( 'ukm_tid_user', {'id': UKMuser.getCurrent().getId(), 'month': "now"|date('m'), 'year': "now"|date('Y') } ) }}">TIMER</a>
+			{% if UKMuser.getCurrent().isDepartmentManager() or UKMuser.getCurrent().isSuperUser() %}
+				<a class="navbar-brand" href="{{ url( 'ukm_tid_employees' ) }}">ANSATTE</a>
+			{% endif %}
+		</nav>
+	</body>
+</html>
+
+<script src="{{ asset('js/mApp/mMessage.model.js') }}"></script>
+
+{% block post_extra_javascript %}{% endblock %}

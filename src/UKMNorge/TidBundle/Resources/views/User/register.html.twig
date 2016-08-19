@@ -1,0 +1,122 @@
+{% extends "UKMTidBundle::layout.html.twig" %}
+
+{% block post_extra_javascript %}
+	{#	<script src="{{ asset('js/foodFYI/page.model.js') }}"></script>#}
+{% endblock %}
+
+{% block content %}
+	<div class="mView" id="localstorage" style="display:none;">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12">
+					<h2>Kan ikke bruke mTime</h2>
+					<p>mTime krever at enheten støtter HTML5 localstorage, noe din enhet dessverre ikke gjør. Det er derfor ikke mulig å bruke mTime på denne enheten</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="mView" id="register" {% if false %} style="display:none;" {% endif %} >
+		
+		
+		<div class="container" id="registerStart" {% if false %} style="display:none;" {% endif %} >
+			<h2>Når startet du på jobb?</h2>
+			<form>
+				<div class="row">
+					<div class="form-group col-xs-4">
+						<select class="form-control" name="day" id="startDay">
+							<option value="01">01</option>
+							<option value="02">02</option>
+						</select>
+					</div>
+					
+					<div class="form-group col-xs-5">
+						<select class="form-control" name="month" id="startMonth">
+							<option value="01">jan</option>
+							<option value="02">feb</option>
+						</select>
+					</div>
+
+					<div class="form-group col-xs-3">
+						<select class="form-control" name="year" id="startYear">
+							<option value="2016">2016</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group col-xs-6">
+						<select class="form-control form-control-lg" name="hour" id="startHour">
+							<option value="08">08</option>
+							<option value="09">09</option>
+						</select>
+					</div>
+					
+					<div class="form-group col-xs-6">
+						<select class="form-control form-control-lg" name="min" id="startMin">
+							<option value="00">00</option>
+							<option value="05">05</option>
+						</select>
+					</div>
+				
+				</div>
+				
+				<div class="row">
+					<div class="form-group col-xs-12">
+						<button class="btn btn-success btn-success-outline btn-block" type="submit" id="startSubmit">Startet på jobb</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		
+		
+		<div class="container" id="registerStop" {% if true %} style="display:none;" {% endif %}>
+			<h2>Når sluttet du på jobb?</h2>
+			<p>Du startet <span id="showStartTime">xx:xx</span></p>
+			<form>
+				<div class="row">
+					<div class="form-group col-xs-4">
+						<select class="form-control" name="day" id="stopDay">
+							<option value="01">01</option>
+							<option value="02">02</option>
+						</select>
+					</div>
+					
+					<div class="form-group col-xs-5">
+						<select class="form-control" name="month" id="stopMonth">
+							<option value="01">jan</option>
+							<option value="02">feb</option>
+						</select>
+					</div>
+
+					<div class="form-group col-xs-3">
+						<select class="form-control" name="year" id="stopYear">
+							<option value="2016">2016</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group col-xs-6">
+						<select class="form-control form-control-lg" name="hour" id="stopHour">
+							<option value="08">08</option>
+						</select>
+					</div>
+					
+					<div class="form-group col-xs-6">
+						<select class="form-control form-control-lg" name="min" id="stopMin">
+							<option value="00">00</option>
+							<option value="05">05</option>
+						</select>
+					</div>
+				
+				</div>
+				
+				<div class="row">
+					<div class="form-group col-xs-12">
+						<button class="btn btn-warning btn-success-outline btn-block" type="submit" id="stopSubmit">Ferdig på jobb</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

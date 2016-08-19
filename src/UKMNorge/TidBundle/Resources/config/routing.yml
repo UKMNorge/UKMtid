@@ -1,0 +1,24 @@
+# ukm_tid_register:
+#     path:     /
+#     defaults: { _controller: UKMTidBundle:User:register }
+
+
+# ukm_tid_user:
+#     path:    /user-{id}/{year}-{month}/
+#     defaults: { _controller: UKMTidBundle:User:report }
+app:
+    resource: "@UKMTidBundle/Controller/"
+    type:     annotation
+
+ukm_tid_employees:
+    path: /users/
+    defaults: { _controller: UKMTidBundle:Users:list }
+    
+ukm_tid_employees_disabled:
+    path: /superuser/disabled/
+    defaults: { _controller: UKMTidBundle:SuperUser:listDisabled }
+    
+ukm_tid_employee_enable:
+    path: /superuser/enable/
+    defaults: { _controller: UKMTidBundle:SuperUser:enable }
+    methods: [POST]

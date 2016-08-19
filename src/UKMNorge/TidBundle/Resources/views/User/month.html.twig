@@ -1,0 +1,115 @@
+{% extends "UKMTidBundle::layout.html.twig" %}
+
+{% block post_extra_javascript %}
+{#	<script src="{{ asset('js/foodFYI/page.model.js') }}"></script>#}
+	<script src="{{ asset('js/month.jquery.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<div class="col-xs-12 col-sm-6">
+			<h1>{{ selected_user.getName() }}</h1>
+			<input type="hidden" id="ukm_user_id" name="user_id" value="{{ selected_user.getId() }}">
+			<select id="monthChange" class="pull-xs-right">
+				<optgroup label="{{ "now"|date('Y') }}">
+					{% for month in "now"|date('m')..1 %}
+					<option value="{{ "now"|date('Y') }}-{{ month < 10 ? '0'~month : month }}"{{ selected_month == month and selected_year == "now"|date('Y') ? 'selected="selected"' : ''}}>{{ month }}-{{ "now"|date('Y') }}</option>
+					{% endfor %}
+				</optgroup>
+				{% for year in "now"|date('Y')-1..2015 %}
+				<optgroup label="{{ year }}">
+					{% for month in 12..1 %}
+					<option value="{{ year }}-{{ month < 10 ? '0'~month : month }}"{{ selected_month == month and selected_year == year ? 'selected="selected"' : ''}}>{{ month }}-{{ year }}</option>
+					{% endfor %}
+				</optgroup>
+				{% endfor %}
+			</select>
+			<div class="clearfix"></div>
+			
+
+			<div class="card m-t-1 m-b-2">
+				<ol class="list-group">
+					<li class="list-group-item alert-success">
+						<div class="row">
+							<div class="col-xs-8"><b>STATUS</b></div>
+							<div class="col-xs-4" align="right">{{ UKMmonth.getUserStatus( selected_user, selected_month, selected_year, 'hours') }}</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12" align="right">
+								<small>({{ UKMmonth.getUserStatus( selected_user, selected_month, selected_year, 'days') }} - 
+										{{ UKMmonth.getUserStatus( selected_user, selected_month, selected_year, 'weeks') }})</small>
+							</div>
+						</div>	
+					</li>
+
+					<li class="list-group-item">
+						<div class="row ">
+							<div class="col-xs-8"><b>Har jobbet</b></div>
+							<div class="col-xs-4" align="right">{{ UKMmonth.getUserWorked( selected_user, selected_month, selected_year, 'hours') }}</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12" align="right">
+								<small>({{ UKMmonth.getUserWorked( selected_user, selected_month, selected_year, 'days') }} - 
+										{{ UKMmonth.getUserWorked( selected_user, selected_month, selected_year, 'weeks') }}, 
+										{{ (( selected_user.getPercentage() / UKMmonth.getToWork( selected_user, selected_month, selected_year ).getValue() ) * UKMmonth.getUserWorked( selected_user, selected_month, selected_year ).getValue() )|round()}}%
+									   )</small>
+							</div>
+						</div>	
+					</li>
+
+
+					<li class="list-group-item">
+						<div class="row ">
+							<div class="col-xs-8"><b>Arbeidstimer i {{ selected_month }}-{{ selected_year }}</b></div>
+							<div class="col-xs-4" align="right">{{ UKMmonth.getToWork( selected_user, selected_month, selected_year, 'hours') }}</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12" align="right">
+								<small>({{ UKMmonth.getToWork( selected_user, selected_month, selected_year, 'days') }} - 
+										{{ UKMmonth.getToWork( selected_user, selected_month, selected_year, 'weeks') }}, {{ selected_user.getPercentage() }}%)</small>
+							</div>
+						</div>	
+					</li>
+
+				</ol>
+			</div>
+		
+		
+		</div>
+		<div class="col-xs-12 col-sm-6">
+			<div>
+				<h4>Stemplinger {{ selected_month }} {{ selected_year }}</h4>
+
+				<div class="pull-xs-right">
+					{{ UKMmonth.getUserWorked( selected_user, selected_month, selected_year, 'days' ) }}
+				</div>
+				<small>{{ UKMuser.getCurrent().getName() }}</small>
+			</div>
+			
+			<ol class="list-group">
+				{% for interval in mServ.getAllIntervalsInMonth(selected_user, selected_month, selected_year) %}
+						<li class="list-group-item">
+						<div class="row">
+							<div class="col-xs-2" align="center"><b>{{ iServ.getDayFromInterval(interval) }}</b><br /><small>{{ iServ.getDayNameFromInterval(interval) }}</small></div>
+							<div class="col-xs-7">{{ iServ.getStart(interval)|date("H:i") }} - {{ iServ.isStopped(interval) ? iServ.getStop(interval)|date("H:i") : '' }}</div>
+							<div class="col-xs-3" align="right"><b>{{ iServ.isStopped(interval) ? iServ.getPrettyLength(interval) : '?' }}</b></div>
+						</div>
+					</li>
+				{% else %}	
+					<li class="list-group-item">
+						Ingen stemplinger
+					</li>
+				{% endfor %}
+			</ol>
+			{# <ol class="list-group">
+				<li class="list-group-item">
+					<div class="row">
+						<div class="col-xs-2" align="center"><b>01</b><br /><small>man</small></div>
+						<div class="col-xs-7">10:00 - 20:00</div>
+						<div class="col-xs-3" align="right"><b>10 t</b></div>
+					</div>
+				</li>
+			</ol> #}
+		</div>
+	</div>
+{% endblock %}

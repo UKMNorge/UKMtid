@@ -1,0 +1,26 @@
+services:
+    UKM.user:
+        class: UKMNorge\TidBundle\Service\UserService
+        arguments: ["@doctrine","@service_container"]
+        
+    UKM.month:
+        class: UKMNorge\TidBundle\Service\MonthService
+        arguments: ["@service_container"]
+        
+    UKM.format:
+        class: UKMNorge\TidBundle\Service\FormatService
+
+    UKM.option:
+        class: UKMNorge\TidBundle\Service\OptionService
+        arguments: ["@doctrine"]
+
+    UKM.work:
+        class: UKMNorge\TidBundle\Service\WorkService
+        arguments: ["@UKM.option", "@doctrine"]
+
+    UKM.interval:
+        class: UKMNorge\TidBundle\Service\IntervalService
+        arguments: ["@doctrine", "@UKM.month", "@UKM.format"]
+
+    # UKM.holiday:
+    #     class: UKMNorge\TidBundle\TidBundle\HolidayService

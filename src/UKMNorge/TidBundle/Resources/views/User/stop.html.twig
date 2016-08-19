@@ -1,0 +1,85 @@
+{% extends "UKMTidBundle::User/register_layout.html.twig" %}	
+{% block time_container %}
+	<div class="container" id="registerStop" {% if false %} style="display:none;" {% endif %}>
+		<h2>Når sluttet du på jobb?</h2>
+		{# TODO: Ikke vis denne dersom vi er i edit-visning med både start og stopp #}
+		{% if true %}
+			<p>Du startet kl. <span id="showStartTime">{{ interval.getStartDateTime|date('H:i') }}</span></p>
+		{% endif %}
+		<form method="POST" action="{{ path('ukm_tid_stop') }}">
+			{# TODO: Kan dette gjøres sånn, eller må alle interaksjoner med objekt gå gjennom en service? #}
+			<input type="hidden" name="interval_id" id="interval_id" value="{{ interval.getId() }}">
+			<div class="row">
+				<div class="form-group col-xs-4">
+					<select class="form-control" name="day" id="stopDay">
+						{% set today = iServ.getCurrentDay %}
+						{% for day in 1 .. mServ.findDaysInMonth(iServ.getCurrentMonth, iServ.getCurrentYear) %}
+							<option value="{{ day }}" {% if day == today %} selected {% endif %}
+								>{{ day }}</option>
+						{% endfor %}
+						{# <option value="01">01</option>
+						<option value="02">02</option> #}
+					</select>
+				</div>
+				
+				<div class="form-group col-xs-5">
+					<select class="form-control" name="month" id="stopMonth">
+						{% set thisMonth = iServ.getCurrentMonth %}
+						{% for month, name in iServ.getMonths %}
+							<option value="{{ month }}" 
+							{% if month == thisMonth %} selected {% endif %}>
+								{{ name }}
+							</option>
+						{% endfor %}
+						{# <option value="01">jan</option>
+						<option value="02">feb</option> #}
+					</select>
+				</div>
+
+				<div class="form-group col-xs-3">
+					<select class="form-control" name="year" id="stopYear">
+						{% set thisYear = iServ.getCurrentYear %}
+						{% for year in iServ.getAvailableYears %}
+							<option value="{{ year }}"
+							{% if year == thisYear %} selected {% endif %}>
+								{{ year }}
+							</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+			<div class="row">
+				<div class="form-group col-xs-6">
+					<select class="form-control form-control-lg" name="hour" id="stopHour">
+						{% set thisHour = iServ.getCurrentHour %}
+						{% for hour in 0 .. 23 %}
+							<option value="{{ hour }}"
+							{% if hour == thisHour %} selected {% endif %}>
+								{{ hour }}
+							</option>
+						{% endfor %}
+					</select>
+				</div>
+				
+				<div class="form-group col-xs-6">
+					<select class="form-control form-control-lg" name="minute" id="stopMin">
+						{% set thisMinute = iServ.getCurrentMinute %}
+						{% for minute in 0 .. 59 %}
+							<option value="{{ minute }}"
+							{% if minute == thisMinute %} selected {% endif %}>
+								{{ minute }}
+							</option>
+						{% endfor %}
+					</select>
+				</div>
+			
+			</div>
+			
+			<div class="row">
+				<div class="form-group col-xs-12">
+					<button class="btn btn-warning btn-success-outline btn-block" type="submit" id="stopSubmit">Ferdig på jobb</button>
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+<div class="container" id="jsAlertMessageContainer" style="display:none;">
+	<div class="row">
+		<div class="col-xs-12 alert" id="jsAlertMessage"></div>
+	</div>
+</div>
+
+{% if app.session.flashbag.peekAll()|length > 0 %}
+	<div class="container">
+		<div class="row">
+			{% for type, messages in app.session.flashbag.all() %}
+				{% for message in messages if type in ['success','danger','info','warning'] %}
+					<div class="col-xs-12 alert alert-{{ type }} flashbagMessage" id="flashbag_{{ type }}_{{ loop.index }}">
+						{{ message|raw }}
+					</div>
+				{% endfor %}
+			{% endfor %}
+		</div>
+	</div>
+{% endif %}

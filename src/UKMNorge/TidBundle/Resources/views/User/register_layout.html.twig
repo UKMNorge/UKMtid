@@ -1,0 +1,24 @@
+{% extends "UKMTidBundle::layout.html.twig" %}
+
+{% block post_extra_javascript %}
+	{#	<script src="{{ asset('js/foodFYI/page.model.js') }}"></script>#}
+{% endblock %}
+
+{% block content %}
+	<div class="mView" id="localstorage" style="display:none;">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12">
+					<h2>Kan ikke bruke mTime</h2>
+					<p>mTime krever at enheten støtter HTML5 localstorage, noe din enhet dessverre ikke gjør. Det er derfor ikke mulig å bruke mTime på denne enheten</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="mView" id="register" {% if false %} style="display:none;" {% endif %} >
+		{% block time_container %}
+		{% endblock %}
+	</div>
+{% endblock %}
