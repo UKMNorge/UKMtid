@@ -28,10 +28,9 @@ class SuperUserController extends Controller
 
         $dServ->addDepartment($name);
 
-        dump($dServ->getDepartments());
-        die();
+        $this->addFlash('success', "Gruppe ".$name." ble lagt til.");
+        return $this->redirectToRoute('ukm_tid_employees');
     }
-
 
     /**
      * @Route("/superuser/addToDepartment/{dep_id}-{user_id}", name="ukmtid_users_addToDepartment")
@@ -42,12 +41,9 @@ class SuperUserController extends Controller
 
     	$dep = $dServ->get($dep_id);
     	$user = $uServ->get($user_id);
-    	dump($dep);
-    	dump($user);
     	$dServ->addMember($dep, $user);
 
-    	dump($dep);
-    	dump($dServ->getMembers($dep));
-    	die();
+    	$this->addFlash('success', "Bruker ".$user->getName()." ble lagt til i gruppen ".$dep->getName().".");
+    	return $this->redirectToRoute('ukm_tid_employees');
     }
 }
