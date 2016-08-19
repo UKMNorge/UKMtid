@@ -4,6 +4,7 @@ namespace UKMNorge\TidBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\OneToMany;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Department
@@ -92,7 +93,64 @@ class Department
      */
     public function getMembers()
     {
-        return $this->members;
+        return $this->members->getValues();
+    }
+
+    /**
+     * Add member
+     *
+     * @param \UKMNorge\TidBundle\Entity\User $member
+     *
+     * @return Department
+     */
+    public function addMember(\UKMNorge\TidBundle\Entity\User $member)
+    {
+        $this->members[] = $member;
+
+        return $this;
+    }
+
+    /**
+     * Remove member
+     *
+     * @param \UKMNorge\TidBundle\Entity\User $member
+     */
+    public function removeMember(\UKMNorge\TidBundle\Entity\User $member)
+    {
+        $this->members->removeElement($member);
+    }
+
+    /**
+     * Add leader
+     *
+     * @param \UKMNorge\TidBundle\Entity\User $leader
+     *
+     * @return Department
+     */
+    public function addLeader(\UKMNorge\TidBundle\Entity\User $leader)
+    {
+        $this->leaders[] = $leader;
+
+        return $this;
+    }
+
+    /**
+     * Remove leader
+     *
+     * @param \UKMNorge\TidBundle\Entity\User $leader
+     */
+    public function removeLeader(\UKMNorge\TidBundle\Entity\User $leader)
+    {
+        $this->leaders->removeElement($leader);
+    }
+
+    /**
+     * Get leaders
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLeaders()
+    {
+        return $this->leaders;
     }
 }
-

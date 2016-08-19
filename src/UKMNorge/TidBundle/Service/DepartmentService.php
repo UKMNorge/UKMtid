@@ -41,7 +41,6 @@ class DepartmentService {
 		$this->em->persist($dep);
 		$this->em->flush();
 		return true;
-
 	}
 
 	public function getMembers(Department $dep) {

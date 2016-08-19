@@ -26,7 +26,7 @@ class Department
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255, unique=true)
      */
     private $name;
 
@@ -93,7 +93,7 @@ class Department
      */
     public function getMembers()
     {
-        return $this->members;
+        return $this->members->getValues();
     }
 
     /**
@@ -118,5 +118,39 @@ class Department
     public function removeMember(\UKMNorge\TidBundle\Entity\User $member)
     {
         $this->members->removeElement($member);
+    }
+
+    /**
+     * Add leader
+     *
+     * @param \UKMNorge\TidBundle\Entity\User $leader
+     *
+     * @return Department
+     */
+    public function addLeader(\UKMNorge\TidBundle\Entity\User $leader)
+    {
+        $this->leaders[] = $leader;
+
+        return $this;
+    }
+
+    /**
+     * Remove leader
+     *
+     * @param \UKMNorge\TidBundle\Entity\User $leader
+     */
+    public function removeLeader(\UKMNorge\TidBundle\Entity\User $leader)
+    {
+        $this->leaders->removeElement($leader);
+    }
+
+    /**
+     * Get leaders
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLeaders()
+    {
+        return $this->leaders;
     }
 }

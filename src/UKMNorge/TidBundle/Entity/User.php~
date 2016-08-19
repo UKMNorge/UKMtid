@@ -128,4 +128,86 @@ class User extends BaseUser
     {
         return $this->percentage;
     }
+
+    /**
+     * Add month
+     *
+     * @param \UKMNorge\TidBundle\Entity\Month $month
+     *
+     * @return User
+     */
+    public function addMonth(\UKMNorge\TidBundle\Entity\Month $month)
+    {
+        $this->months[] = $month;
+
+        return $this;
+    }
+
+    /**
+     * Remove month
+     *
+     * @param \UKMNorge\TidBundle\Entity\Month $month
+     */
+    public function removeMonth(\UKMNorge\TidBundle\Entity\Month $month)
+    {
+        $this->months->removeElement($month);
+    }
+
+    /**
+     * Get months
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMonths()
+    {
+        return $this->months;
+    }
+
+    /**
+     * Set department
+     *
+     * @param \UKMNorge\TidBundle\Entity\Department $department
+     *
+     * @return User
+     */
+    public function setDepartment(\UKMNorge\TidBundle\Entity\Department $department = null)
+    {
+        $this->department = $department;
+
+        return $this;
+    }
+
+    /**
+     * Get department
+     *
+     * @return \UKMNorge\TidBundle\Entity\Department
+     */
+    public function getDepartment()
+    {
+        return $this->department;
+    }
+
+    /**
+     * Set leaderFor
+     *
+     * @param \UKMNorge\TidBundle\Entity\Department $leaderFor
+     *
+     * @return User
+     */
+    public function setLeaderFor(\UKMNorge\TidBundle\Entity\Department $leaderFor = null)
+    {
+        $this->leaderFor = $leaderFor;
+
+        return $this;
+    }
+
+    /**
+     * Get leaderFor
+     *
+     * @return \UKMNorge\TidBundle\Entity\Department
+     */
+    public function getLeaderFor()
+    {
+        return $this->leaderFor;
+    }
 }

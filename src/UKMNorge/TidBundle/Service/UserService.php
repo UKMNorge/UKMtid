@@ -11,10 +11,6 @@ class UserService {
 		$this->container = $container;
 		$this->repo = $doctrine->getRepository("UKMTidBundle:User");
 	}
-	
-	public function getMyEmployees( $me ) {
-		return array(new tmp_user(), new tmp_user());
-	}
 
 	public function isLoggedIn() {
 		#$role = $this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED');
@@ -49,6 +45,20 @@ class UserService {
 		return $user;
 	}
 	
+	// Returnerer et array med Departments
+	public function getMyDepartments() {
+		$dServ = $this->container->get('UKM.department');
+		$user = $this->getCurrent();
+
+		$deps = array();
+		if($user->isSuperUser()) {
+			$deps = $dServ->getDepartments();
+		}
+		else
+			$deps[] = $user->getDepartment();
+		return $deps;
+	}
+
 	public function getMyEmployees( $leader ) {
 		$dServ = $this->container->get('UKM.department');
 		
@@ -57,12 +67,12 @@ class UserService {
 		if( $leader->isSuperUser() ) {
 			// List all departments as well
 			$deps = $dServ->getDepartments();
-			for ($deps as $dep) {
-				$employees[] = ($dep->getMembers());
+			foreach ($deps as $dep) {
+				$employees = array_merge($employees, $dep->getMembers());
 			}
 		} else if ($leader->isDepartmentManager() ) {
 			$dep = $dServ->getDepartment($leader);
-			$employees[] = $dep->getMembers();
+			$employees = $dep->getMembers();
 		}
 
 		return $employees;
