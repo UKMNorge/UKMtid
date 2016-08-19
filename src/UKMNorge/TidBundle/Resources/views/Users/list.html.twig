@@ -1,0 +1,24 @@
+{% extends "UKMTidBundle::layout.html.twig" %}
+
+{% block post_extra_javascript %}
+{#	<script src="{{ asset('js/foodFYI/page.model.js') }}"></script>#}
+	<script src="{{ asset('js/month.jquery.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<div class="col-xs-12 col-sm-6">
+			<h1>Mine ansatte</h1>
+			
+			<ol class="list-group">
+				{% for user in UKMuser.getMyEmployees( UKMuser.getCurrent() ) %}
+					<li class="list-group-item">
+						<a href="{{ url('ukm_tid_user', {'id': user.getId(), 'month': "now"|date('m'), 'year':"now"|date('Y')}) }}">{{ user.getName() }}</a>
+					</li>
+				{% else %}
+					<li class="list-group-item">Du har ingen registrerte ansatte</li>
+				{% endfor %}
+			</ol>
+		</div>
+	</div>
+{% endblock %}

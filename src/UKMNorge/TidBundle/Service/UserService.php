@@ -11,6 +11,10 @@ class UserService {
 		$this->container = $container;
 		$this->repo = $doctrine->getRepository("UKMTidBundle:User");
 	}
+	
+	public function getMyEmployees( $me ) {
+		return array(new tmp_user(), new tmp_user());
+	}
 
 	public function isLoggedIn() {
 		#$role = $this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED');
