@@ -2,6 +2,12 @@
     "name": "vagrant/app",
     "license": "proprietary",
     "type": "project",
+    "repositories": [
+        {
+            "url": "https://github.com/UKMNorge/UKMDipBundle.git",
+            "type": "git"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "": "src/"
@@ -28,7 +34,8 @@
         "sensio/distribution-bundle": "^5.0",
         "sensio/framework-extra-bundle": "^3.0.2",
         "incenteev/composer-parameter-handler": "^2.0",
-        "friendsofsymfony/user-bundle": "~2.0@dev"
+        "friendsofsymfony/user-bundle": "~2.0@dev",
+        "ukmnorge/ukmdipbundle": "*"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
