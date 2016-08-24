@@ -19,6 +19,10 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
 
     # DIP-parameters:
-    dip_location: tid
-    dip_firewall_area: secure_area
-    dip_entry_point: ukm_tid_register
+    ukm_dip.firewall_area: secure_area
+    ukm_dip.entry_point: ~
+    ukm_dip.api_key: ~
+    ukm_dip.api_secret: ~
+    ukm_dip.token_salt: ~
+    ukm_dip.user_class: AppBundle\Entity\User 
+    UKM_HOSTNAME: ukm.dev

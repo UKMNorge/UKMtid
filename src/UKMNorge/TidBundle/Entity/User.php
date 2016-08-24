@@ -2,7 +2,8 @@
 
 namespace UKMNorge\TidBundle\Entity;
 
-use FOS\UserBundle\Model\User as BaseUser;
+//use FOS\UserBundle\Model\User as BaseUser;
+use UKMNorge\UKMDipBundle\Entity\UserClass as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\OneToMany;
 use Doctrine\ORM\ManyToOne;
@@ -185,5 +186,18 @@ class User extends BaseUser
     public function getDepartment()
     {
         return $this->department;
+    }
+
+    // TODO: Implement more?
+    // Tilgjengelige datafelt er hentet fra https://github.com/UKMNorge/UKMdelta/blob/master/src/UKMNorge/UserBundle/Security/Authentication/Handler/LoginSuccessHandler.php
+    public function setData($data)
+    {
+        try {
+            $this->setFirstName($data->first_name);
+            $this->setLastName($data->last_name);
+            $this->setName($data->first_name . ' ' . $data->last_name);
+        } catch (Exception $e) {
+            throw new Exception('UKMTidBundle:User.php:setData: En uventet feil oppsto ved lagring av data fra UKMdelta. ' . $e->getMessage());
+        }
     }
 }
