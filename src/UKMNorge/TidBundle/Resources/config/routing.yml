@@ -13,12 +13,35 @@ app:
 ukm_tid_employees:
     path: /users/
     defaults: { _controller: UKMTidBundle:Users:list }
-    
+
 ukm_tid_employees_disabled:
     path: /superuser/disabled/
     defaults: { _controller: UKMTidBundle:SuperUser:listDisabled }
-    
+
 ukm_tid_employee_enable:
     path: /superuser/enable/
     defaults: { _controller: UKMTidBundle:SuperUser:enable }
     methods: [POST]
+
+ukm_tid_department_new:
+    path: /superuser/new/
+    defaults: { _controller: UKMTidBundle:SuperUser:newDepartment }
+    methods: [POST]
+
+ukm_tid_users_addToDepartment:
+    path: /superuser/addToDepartment/
+    defaults: { _controller: UKMTidBundle:SuperUser:addToDepartment }
+    methods: [POST]
+
+ukm_tid_users_setPercentage:
+    path: /superuser/setPercentage/
+    defaults: { _controller: UKMTidBundle:SuperUser:setPercentage }
+    methods: [POST]
+
+ukm_tid_superuser_admin:
+    path: /superuser/
+    defaults: { _controller: UKMTidBundle:SuperUser:admin }
+
+ukm_tid_validering:
+    path: /validate/
+    defaults: { _controller: UKMTidBundle:User:validateInfo }

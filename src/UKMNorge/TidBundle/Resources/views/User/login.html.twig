@@ -1,0 +1,37 @@
+{% extends "UKMTidBundle::layout.html.twig" %}
+
+{% block post_extra_javascript %}
+	{#	<script src="{{ asset('js/foodFYI/page.model.js') }}"></script>#}
+{% endblock %}
+
+{% block content %}
+	<div class="mView" id="localstorage" style="display:none;">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12">
+					<h2>Kan ikke bruke mTime</h2>
+					<p>mTime krever at enheten støtter HTML5 localstorage, noe din enhet dessverre ikke gjør. Det er derfor ikke mulig å bruke mTime på denne enheten</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="mView" id="register" {% if false %} style="display:none;" {% endif %} >
+		<div class="container">
+			<div class="row">
+				{% if isLoggedIn and ( not uServ.isValid() ) %}
+					<div class="col-xs-12">
+						<h2>Hei {{ uServ.getCurrent().getName() }}</h2>
+						<p>For at du skal få tilgang til UKMtid må en administrator legge deg til i en gruppe. Ta kontakt med support på support@ukm.no</p>
+					</div>
+				{% else %}
+					<div class="col-xs-10 offset-xs-1 col-md-4 offset-md-4">
+						{# Åpner man denne siden og er logget inn og har en validert bruker kan man trykke på linken og havne rett inn på forsiden. #}
+						<a href="{{ path('ukm_dip_login') }}"><button class="btn btn-lg btn-primary">Logg inn med UKMid</button></a>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+{% endblock %}

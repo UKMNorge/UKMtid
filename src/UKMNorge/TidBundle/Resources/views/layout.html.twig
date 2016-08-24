@@ -52,6 +52,7 @@
 			<a class="navbar-brand" href="{{ url( 'ukm_tid_user', {'id': UKMuser.getCurrent().getId(), 'month': "now"|date('m'), 'year': "now"|date('Y') } ) }}">TIMER</a>
 			{% if UKMuser.getCurrent().isDepartmentManager() or UKMuser.getCurrent().isSuperUser() %}
 				<a class="navbar-brand" href="{{ url( 'ukm_tid_employees' ) }}">ANSATTE</a>
+				<a class="navbar-brand" href="{{ url( 'ukm_tid_superuser_admin' ) }}">ADMIN</a>
 			{% endif %}
 		</nav>
 	</body>

@@ -20,11 +20,24 @@ class UserController extends Controller
     	$userServ = $this->get('UKM.user');
     	$iServ = $this->get('UKM.interval');
     	$mServ = $this->get('UKM.month');
+        $logger = $this->get('logger');
+
+        $timer = $this->get('UKM.timer');
+        $timer->start('isLoggedIn');
 
     	if(!$userServ->isLoggedIn()) {
+            $logger->info('UKMTidBundle: Ikke logget inn, sender brukeren videre til innlogging.');
+            return $this->redirectToRoute('ukm_tid_validering');
+            #return $this->redirectToRoute('ukm_dip_login');
     		throw new Exception("Not implemented - send to Delta when not logged in. Do this from UserService, maybe?");
     		return;
     	}
+
+        if(!$userServ->isValid()) {
+            return $this->redirectToRoute('ukm_tid_validering');
+        }
+
+        $timer->stop('isLoggedIn');
 
     	$user = $userServ->getCurrent();
     	$interval = $iServ->getCurrentInterval($user);
@@ -42,7 +55,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/stop/", name="ukm_tid_stop", requirements={"interval_id": "\d+", "day": "\d+", "month": "\d+", "hour": "\d+", "minute": "\d+"})
+     * @Route("/user/stop/", name="ukm_tid_stop", requirements={"interval_id": "\d+", "day": "\d+", "month": "\d+", "hour": "\d+", "minute": "\d+"})
      * @Method({"POST"})
      */
     public function stopAction(Request $request) {
@@ -72,7 +85,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/start/", name="ukm_tid_start", requirements={"day": "\d+", "month": "\d+", "hour": "\d+", "minute": "\d+"})
+     * @Route("/user/start/", name="ukm_tid_start", requirements={"day": "\d+", "month": "\d+", "hour": "\d+", "minute": "\d+"})
      * @Method({"POST"})
      */
     public function startAction(Request $request) {
@@ -153,7 +166,17 @@ class UserController extends Controller
 		$data['selected_year'] = $year;
 	    return $this->render('UKMTidBundle:User:month.html.twig', $data);
     }
-    
+        
+    public function validateInfoAction(Request $request) {
+
+        // Hvis brukeren både er valid og logget inn, redirect til framsiden?
+
+        $data = array();
+        $data['uServ'] = $this->get('UKM.user');
+        $data['isLoggedIn'] = $this->get('UKM.user')->isLoggedIn();
+        return $this->render('UKMTidBundle:User:login.html.twig', $data);
+    }
+
 	/**
 	 * _throwJSONException
 	 *

@@ -1,0 +1,75 @@
+{% extends "UKMTidBundle::layout.html.twig" %}
+
+{% block content %}
+	<div class="container">
+		<h1>UKMtid admin</h1>
+		<div class="col-xs-12 col-sm-6">
+			<ol class="list-group">
+				<li class="list-group-item">
+					<div class="form-group">
+						<h4>Legg til kontor</h4>
+						<form class="" method="post" action="{{ path('ukm_tid_department_new') }}">
+							<label class="sr-only" for="name">Navn på nytt kontor</label>
+							<input name="name" id="name" class="form-control" placeholder="Navn på nytt kontor"></input>
+							<br>
+							<button class="btn btn-success btn-md pull-right" type="submit">Lagre</button>
+						</form>
+					</div>
+				</li>
+			</ol>
+		</div>
+		<div class="col-xs-12 col-sm-6">
+			<ol class="list-group">
+				<li class="list-group-item">
+					<div class="form-horizontal">
+						<div class="form-group form-group-lg">
+							<h4>Legg til bruker i kontor</h4>
+							<form class="" method="post" action="{{ path('ukm_tid_users_addToDepartment') }}">
+								<label for="user_id">Bruker</label>				
+								<select name="user_id" id="user_id" class="form-control" required="required">
+									{% for user in uServ.getUsers() %}
+										<option value="{{ user.getId() }}">{{ user.getName() }}</option>
+									{% endfor %}
+								</select>
+								<label for="dep_id">Kontor</label>
+								<select name="dep_id" id="dep_id" class="form-control" required="required">
+									{% for department in dServ.getDepartments() %}
+										<option value="{{ department.getId() }}">{{ department.getName() }}</option>
+									{% else %}
+										<option value="" disabled="true">Ingen kontor finnes!</option>
+									{% endfor %}
+								</select>
+								<br>
+								<button class="btn btn-success btn-md pull-right" type="submit">Lagre</button>
+							</form>
+						</div>
+					</div>
+				</li>
+			</ol>
+		</div>
+		<div class="col-xs-12 col-sm-6">
+			<ol class="list-group">
+				<li class="list-group-item">
+					<div class="form-horizontal">
+						<div class="form-group form-group-lg">
+							<h4>Sett arbeidsmengde for bruker</h4>
+							<form class="" method="post" action="{{ path('ukm_tid_users_setPercentage') }}">
+								<label for="user_id">Bruker</label>				
+								<select name="user_id" id="user_id" class="form-control" required="required">
+									{% for user in uServ.getUsers() %}
+										<option value="{{ user.getId() }}">{{ user.getName() }}</option>
+									{% endfor %}
+								</select>
+								<br>
+								<label class="sr-only" for="dep_id">Stillingsprosent</label>
+								<input name="percentage" id="percentage" class="form-control" type="number" min="0" max="100" required="required" placeholder="Stillingsprosent"></input>
+								<br>
+								<button class="btn btn-success btn-md pull-right" type="submit">Lagre</button>
+							</form>
+						</div>
+					</div>
+				</li>
+			</ol>
+		</div>
+	</div>
+{% endblock %}

@@ -26,5 +26,8 @@ services:
         class: UKMNorge\TidBundle\Service\DepartmentService
         arguments: ["@doctrine"]
 
+    UKM.timer:
+        class: UKMNorge\TidBundle\Service\TimerService
+        arguments: ["@service_container"]
     # UKM.holiday:
     #     class: UKMNorge\TidBundle\TidBundle\HolidayService

@@ -17,6 +17,7 @@ class MonthService {
 		$this->doctrine = $container->get('doctrine');
 		$this->em = $this->doctrine->getManager();
 		$this->repo = $this->doctrine->getRepository("UKMTidBundle:Month");
+		$this->logger = $this->container->get('logger');
 	}
 
 	public function get(User $user, $month, $year) {

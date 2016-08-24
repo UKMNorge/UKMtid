@@ -3,20 +3,27 @@
 namespace UKMNorge\TidBundle\Service;
 
 use Exception;
-
+use UKMNorge\TidBundle\Entity\User;
 
 class UserService {
 	public function __construct($doctrine, $container) {
 		$this->doctrine = $doctrine;
 		$this->container = $container;
 		$this->repo = $doctrine->getRepository("UKMTidBundle:User");
+		$this->timer = $container->get('UKM.timer');
+		$this->logger = $container->get('logger');
 	}
 
 	public function isLoggedIn() {
 		#$role = $this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED');
 		#dump($role);
-		return $this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED');
+		// TODO: Hvorfor looper denne når man ikke er innlogget? (/validate)
+		$this->logger->info('UKMTidBundle: Sjekker om brukeren er logget inn...');
+		$isLoggedIn = $this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED');
+		$this->logger->info('UKMTidBundle: Brukeren var '. $isLoggedIn ? '' : ' ikke ' . 'logget inn.' );
+		return $isLoggedIn;
 	}
+
 	public function get( $id ) {
 		$currentUser = $this->getCurrent();
 
@@ -60,6 +67,7 @@ class UserService {
 	}
 
 	public function getMyEmployees( $leader ) {
+		$this->timer->start();
 		$dServ = $this->container->get('UKM.department');
 		
 		$employees = array();
@@ -74,12 +82,85 @@ class UserService {
 			$dep = $dServ->getDepartment($leader);
 			$employees = $dep->getMembers();
 		}
+		
+		$this->timer->stop();
 
 		return $employees;
 	}
 
 	public function getCurrent() {
-		return $this->container->get('security.token_storage')->getToken()->getUser();
+		$user = $this->container->get('security.token_storage')->getToken()->getUser();
+		if(!is_object($user)) {
+			$user = $this->getByDeltaId($user);
+		}
+#		if(!$this->isValid($user)) {
+#			$errorMsg = 'UKMTidBundle: Denne brukeren er ikke gyldig (Delta-ID '.$user->getDeltaId().').';
+#			$this->logger->info($errorMsg);
+#			throw new Exception($errorMsg);
+#		}
+		return $user;
+	}
+
+	public function getByDeltaId($id) {
+		return $this->repo->findOneBy(array('deltaId' => $id));
+	}
+
+	public function hasDepartment(User $user) {
+		if(null != $user->getDepartment())
+			return true;
+		return false;
+	}
+
+	public function getUsers() {
+		if( $this->getCurrent()->isSuperUser() ) {
+			// Uses more memory, but supports timers. Better version below
+			$this->timer->start('getUsers');
+			$users = $this->repo->findAll(); 
+			$this->timer->stop('getUsers');
+
+			return $users;
+			#return $this->repo->findAll();
+		}
+		else throw new Exception('UKMTidBundle: User not allowed to list all users. Need to be superuser.');
+	}
+
+	/**
+	 * En bruker er ikke godkjent før den har blitt gitt en Department av en SuperAdmin, eller har angitt arbeidstid i prosent.
+	 * Den er heller ikke gyldig dersom navnet er tomt.
+	 */
+	public function isValid(User $user = null) {
+		if(!$user)
+			$user = $this->getCurrent();
+		$valid = true;
+		if(!$this->hasDepartment($user))
+			$valid = false;
+		elseif(!$user->getPercentage())
+			$valid = false;
+		elseif(!$user->getName())
+			$valid = false;
+
+		if($user->isSuperUser())
+			$valid = true;
+
+		return $valid;
+	}
+
+	public function setPercentage(User $user, $percentage) {
+		$error = null;
+		if(!is_numeric($percentage))
+			$error = 'UKMTidBundle: Stillingsprosent må være et tall mellom 0 og 100.';
+		elseif($percentage < 0 || $percentage > 100)
+			$error = 'UKMTidBundle: Stillingsprosent må være et tall mellom 0 og 100.';
+
+		if ($error) {
+			$this->logger->error($error);
+			throw new Exception($error);
+		}
+
+		$user->setPercentage($percentage);
+		$this->doctrine->getManager()->persist($user);
+		$this->doctrine->getManager()->flush();
+		return true;
 	}
 }
 
