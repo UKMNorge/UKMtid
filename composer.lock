@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6108d44105953ee82f0607ec9a3a63d3",
-    "content-hash": "ac3b1fdadafb8bb534a1ea0f3072ac40",
+    "hash": "4e93dd16102cdc1853ee2a92c93a00da",
+    "content-hash": "cdc55d24a04b7cd19745ef3ac030eeaf",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2022,11 +2022,11 @@
         },
         {
             "name": "ukmnorge/ukmdipbundle",
-            "version": "dev-master",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/UKMNorge/UKMDipBundle.git",
-                "reference": "d530dec65f9a0591e1fcae5fc82ca279a90a0d36"
+                "reference": "3d8eab8474d8a7ff1c7bec214fa00bf8d882ab3b"
             },
             "require": {
                 "friendsofsymfony/user-bundle": "~2.0@dev"
@@ -2046,7 +2046,7 @@
             ],
             "description": "Simple authentication for UKM services",
             "homepage": "http://github.com/UKMNorge/UKMDipBundle",
-            "time": "2016-08-23 21:21:46"
+            "time": "2016-08-24 12:19:16"
         }
     ],
     "packages-dev": [
