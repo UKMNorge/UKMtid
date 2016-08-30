@@ -15,9 +15,16 @@ class DepartmentService {
 	public function __construct($doctrine, $timer) {
 		$this->timer = $timer;
 		$this->timer->start('DepartmentService::__construct()');
+		#$this->timer->start('DepartmentService::__construct() - Doctrine');
+		
 		$this->doctrine = $doctrine;
+		#$this->timer->stop('DepartmentService::__construct() - Doctrine');
+		#$this->timer->start('DepartmentService::__construct() - Manager');
 		$this->em = $doctrine->getManager();
+		#$this->timer->stop('DepartmentService::__construct() - Manager');
+		#$this->timer->start('DepartmentService::__construct() - DepartmentRepo');
 		$this->repo = $doctrine->getRepository("UKMTidBundle:Department");
+		#$this->timer->stop('DepartmentService::__construct() - DepartmentRepo');
 		$this->timer->stop('DepartmentService::__construct()');
 	}
 
