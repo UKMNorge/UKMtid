@@ -12,12 +12,17 @@ class IntervalService {
 	private $doctrine;
 	private $repo;
 
-	public function __construct($doctrine, $monthServ, $formatter) {
+	public function __construct($doctrine, $monthServ, $formatter, $timer) {
+		$this->timer = $timer;
+		$this->timer->start('IntervalService::__construct()');
+		
 		$this->doctrine = $doctrine;
 		$this->repo = $doctrine->getRepository("UKMTidBundle:Interval");
 		$this->em = $doctrine->getManager();
 		$this->mServ = $monthServ;
 		$this->formatter = $formatter;
+
+		$this->timer->stop('IntervalService::__construct()');
 	}
 
 	// Hent det nyeste intervallet som ikke er stoppet.

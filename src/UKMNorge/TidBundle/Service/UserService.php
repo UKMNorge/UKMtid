@@ -6,12 +6,19 @@ use Exception;
 use UKMNorge\TidBundle\Entity\User;
 
 class UserService {
+	// Tid:
+	// #1 88ms
+	// #2 45ms
+	// #4 22ms
 	public function __construct($doctrine, $container) {
+		$this->timer = $container->get('UKM.timer');
+		$this->timer->start('UserService::__construct()');
 		$this->doctrine = $doctrine;
 		$this->container = $container;
 		$this->repo = $doctrine->getRepository("UKMTidBundle:User");
-		$this->timer = $container->get('UKM.timer');
+		
 		$this->logger = $container->get('logger');
+		$this->timer->stop('UserService::__construct()');
 	}
 
 	public function isLoggedIn() {

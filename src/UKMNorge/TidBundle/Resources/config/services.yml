@@ -1,4 +1,7 @@
 services:
+    UKM.timer:
+        class: UKMNorge\TidBundle\Service\TimerService
+        arguments: ["@service_container"]
     UKM.user:
         class: UKMNorge\TidBundle\Service\UserService
         arguments: ["@doctrine","@service_container"]
@@ -20,14 +23,11 @@ services:
 
     UKM.interval:
         class: UKMNorge\TidBundle\Service\IntervalService
-        arguments: ["@doctrine", "@UKM.month", "@UKM.format"]
+        arguments: ["@doctrine", "@UKM.month", "@UKM.format", "@UKM.timer"]
 
     UKM.department:
         class: UKMNorge\TidBundle\Service\DepartmentService
-        arguments: ["@doctrine"]
+        arguments: ["@doctrine", "@UKM.timer"]
 
-    UKM.timer:
-        class: UKMNorge\TidBundle\Service\TimerService
-        arguments: ["@service_container"]
     # UKM.holiday:
     #     class: UKMNorge\TidBundle\TidBundle\HolidayService

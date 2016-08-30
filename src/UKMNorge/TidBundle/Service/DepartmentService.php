@@ -7,10 +7,18 @@ use UKMNorge\TidBundle\Entity\User;
 
 class DepartmentService {
 	
-	public function __construct($doctrine) {
+	/// HOLY SHIT THIS TAKES 301 ms!!!
+	/// Second-run: 109ms
+	/// Third: 255ms
+	/// Fourth: 127ms
+	/// Fifth: 62ms	
+	public function __construct($doctrine, $timer) {
+		$this->timer = $timer;
+		$this->timer->start('DepartmentService::__construct()');
 		$this->doctrine = $doctrine;
 		$this->em = $doctrine->getManager();
 		$this->repo = $doctrine->getRepository("UKMTidBundle:Department");
+		$this->timer->stop('DepartmentService::__construct()');
 	}
 
 	public function get($dep_id) {
