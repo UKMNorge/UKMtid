@@ -3,65 +3,8 @@
 	<div class="container" id="registerStart" {% if false %} style="display:none;" {% endif %} >
 		<h2>Når startet du på jobb?</h2>
 		<form method="POST" action="{{ path('ukm_tid_start') }}">
-			<div class="row">
-				<div class="form-group col-xs-4">
-					<select class="form-control" name="day" id="startDay">
-						{% set today = iServ.getCurrentDay %}
-						{% for day in 1 .. mServ.findDaysInMonth(iServ.getCurrentMonth, iServ.getCurrentYear) %}
-							<option value="{{ day }}" {% if day == today %} selected {% endif %}>{{ day }}</option>
-						{% endfor %}
-					</select>
-				</div>
-				
-				<div class="form-group col-xs-5">
-					<select class="form-control" name="month" id="startMonth">
-						{% set thisMonth = iServ.getCurrentMonth %}
-						{% for month, name in iServ.getMonths %}
-							<option value="{{ month }}" 
-							{% if month == thisMonth %} selected {% endif %}>
-								{{ name }}
-							</option>
-						{% endfor %}
-					</select>
-				</div>
-
-				<div class="form-group col-xs-3">
-					<select class="form-control" name="year" id="startYear">
-						{% set thisYear = iServ.getCurrentYear %}
-						{% for year in iServ.getAvailableYears %}
-							<option value="{{ year }}"
-							{% if year == thisYear %} selected {% endif %}>
-								{{ year }}
-							</option>
-						{% endfor %}
-					</select>
-				</div>
-			</div>
-			<div class="row">
-				<div class="form-group col-xs-6">
-					<select class="form-control form-control-lg" name="hour" id="startHour">
-						{% set thisHour = iServ.getCurrentHour %}
-						{% for hour in 0..23 %}
-							<option value="{{ hour }}" 
-							{{ hour == thisHour ? 'selected' }}>
-								{{ hour }}
-							</option>
-						{% endfor %}
-					</select>
-				</div>
-				
-				<div class="form-group col-xs-6">
-					<select class="form-control form-control-lg" name="minute" id="startMin">
-						{% set thisMinute = iServ.getCurrentMinute %}
-						{# {% for minute in 0 .. 59 if (minute is divisible by(5) ) %} #}
-						{% for minute in 0 .. 59 %}
-							<option value="{{ minute }}"{% if minute == thisMinute %} selected {% endif %}>{{ minute }}</option>
-						{% endfor %}
-					</select>
-				</div>
-			
-			</div>
-			
+			{% embed 'UKMTidBundle::User/startform.html.twig' with { 'today': iServ.getCurrentDay(), 'days': mServ.findDaysInMonth(iServ.getCurrentMonth(), iServ.getCurrentYear()), 'thisMonth': iServ.getCurrentMonth(), 'months': iServ.getMonths(), 'thisYear': iServ.getCurrentYear(), 'years': iServ.getAvailableYears(), 'thisHour': iServ.getCurrentHour(), 'thisMinute': iServ.getCurrentMinute() } %}
+			{% endembed %}
 			<div class="row">
 				<div class="form-group col-xs-12">
 					<button class="btn btn-success btn-success-outline btn-block" type="submit" id="startSubmit">Startet på jobb</button>

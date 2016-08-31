@@ -43,10 +43,9 @@ class Interval
     /**
      *
      * 
-     * @ORM\Column(name="userid", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="User")
      */
-    private $userid;
-
+    private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="Month", inversedBy="intervals")
@@ -185,40 +184,6 @@ class Interval
         $date = new DateTime();
         $date->setTimestamp($this->stop);
         return $date;
-    }
-
-    /**
-     * Set userid
-     *
-     * @param integer $userid
-     *
-     * @return Interval
-     */
-    public function setUserid($userid)
-    {
-        $this->userid = $userid;
-
-        return $this;
-    }
-
-    /**
-     * Get userid
-     *
-     * @return integer
-     */
-    public function getUserid()
-    {
-        return $this->userid;
-    }
-
-    /**
-     * Get user.
-     *
-     * @return integer
-     */
-    public function getUser()
-    {
-        return new User($this->userid);
     }
 
     /**

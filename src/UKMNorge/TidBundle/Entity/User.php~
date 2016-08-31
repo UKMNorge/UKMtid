@@ -2,7 +2,8 @@
 
 namespace UKMNorge\TidBundle\Entity;
 
-use FOS\UserBundle\Model\User as BaseUser;
+//use FOS\UserBundle\Model\User as BaseUser;
+use UKMNorge\UKMDipBundle\Entity\UserClass as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\OneToMany;
 use Doctrine\ORM\ManyToOne;
@@ -50,6 +51,12 @@ class User extends BaseUser
      * @ORM\ManyToOne(targetEntity="Department", inversedBy="members")
      */    
     private $department;
+
+    /**
+     *
+     * @ORM\Column(name="excludeHolidays", type="boolean", nullable=true)
+     */ 
+    private $excludeHolidays = false;
 
     /**
      * Get id
@@ -187,27 +194,40 @@ class User extends BaseUser
         return $this->department;
     }
 
+    // TODO: Implement more?
+    // Tilgjengelige datafelt er hentet fra https://github.com/UKMNorge/UKMdelta/blob/master/src/UKMNorge/UserBundle/Security/Authentication/Handler/LoginSuccessHandler.php
+    public function setData($data)
+    {
+        try {
+            $this->setFirstName($data->first_name);
+            $this->setLastName($data->last_name);
+            $this->setName($data->first_name . ' ' . $data->last_name);
+        } catch (Exception $e) {
+            throw new Exception('UKMTidBundle:User.php:setData: En uventet feil oppsto ved lagring av data fra UKMdelta. ' . $e->getMessage());
+        }
+    }
+
     /**
-     * Set leaderFor
+     * Set excludeHolidays
      *
-     * @param \UKMNorge\TidBundle\Entity\Department $leaderFor
+     * @param boolean $excludeHolidays
      *
      * @return User
      */
-    public function setLeaderFor(\UKMNorge\TidBundle\Entity\Department $leaderFor = null)
+    public function setExcludeHolidays($excludeHolidays)
     {
-        $this->leaderFor = $leaderFor;
+        $this->excludeHolidays = $excludeHolidays;
 
         return $this;
     }
 
     /**
-     * Get leaderFor
+     * Get excludeHolidays
      *
-     * @return \UKMNorge\TidBundle\Entity\Department
+     * @return boolean
      */
-    public function getLeaderFor()
+    public function getExcludeHolidays()
     {
-        return $this->leaderFor;
+        return $this->excludeHolidays;
     }
 }

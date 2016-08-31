@@ -60,7 +60,7 @@
 
 					<li class="list-group-item">
 						<div class="row ">
-							<div class="col-xs-8"><b>Arbeidstimer i {{ selected_month }}-{{ selected_year }}</b></div>
+							<div class="col-xs-8"><b>Arbeidstimer i {{ bmServ.monthToNiceName(selected_month) }} {{ selected_year }}</b></div>
 							<div class="col-xs-4" align="right">{{ UKMmonth.getToWork( selected_user, selected_month, selected_year, 'hours') }}</div>
 						</div>
 						<div class="row">
@@ -78,7 +78,7 @@
 		</div>
 		<div class="col-xs-12 col-sm-6">
 			<div>
-				<h4>Stemplinger {{ selected_month }} {{ selected_year }}</h4>
+				<h4>Stemplinger {{ bmServ.monthToNiceName(selected_month) }} {{ selected_year }}</h4>
 
 				<div class="pull-xs-right">
 					{{ UKMmonth.getUserWorked( selected_user, selected_month, selected_year, 'days' ) }}
@@ -88,7 +88,8 @@
 			
 			<ol class="list-group">
 				{% for interval in mServ.getAllIntervalsInMonth(selected_user, selected_month, selected_year) %}
-						<li class="list-group-item">
+					<li class="list-group-item interval_box" style="li { cursor: pointer; cursor: hand; }">
+						<input type="hidden" id="interval_id" value="{{ interval.getId() }}">
 						<div class="row">
 							<div class="col-xs-2" align="center"><b>{{ iServ.getDayFromInterval(interval) }}</b><br /><small>{{ iServ.getDayNameFromInterval(interval) }}</small></div>
 							<div class="col-xs-7">{{ iServ.getStart(interval)|date("H:i") }} - {{ iServ.isStopped(interval) ? iServ.getStop(interval)|date("H:i") : '' }}</div>
@@ -101,15 +102,6 @@
 					</li>
 				{% endfor %}
 			</ol>
-			{# <ol class="list-group">
-				<li class="list-group-item">
-					<div class="row">
-						<div class="col-xs-2" align="center"><b>01</b><br /><small>man</small></div>
-						<div class="col-xs-7">10:00 - 20:00</div>
-						<div class="col-xs-3" align="right"><b>10 t</b></div>
-					</div>
-				</li>
-			</ol> #}
 		</div>
 	</div>
 {% endblock %}

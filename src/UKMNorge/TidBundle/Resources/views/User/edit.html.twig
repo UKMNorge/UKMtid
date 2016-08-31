@@ -1,0 +1,35 @@
+{% extends 'UKMTidBundle::User/register_layout.html.twig' %}
+
+{% block time_container %}
+	<div class="container" id="registerStart" {% if false %} style="display:none;" {% endif %} >
+		<form method="POST" action="{{ path('ukm_tid_saveEdit') }}">
+			<div>
+				<h2>Når startet du på jobb?</h2>
+				{% embed 'UKMTidBundle::User/startform.html.twig' %}
+				{% endembed %}
+			</div>
+			<br>
+			<div>
+				<h2>Når sluttet du på jobb?</h2>
+				{% embed 'UKMTidBundle::User/stopform.html.twig' with 
+					{
+						'today': stopDay,
+						'days': stopDays,
+						'thisMonth': stopMonth,
+						'months': months,
+						'thisYear': stopYear,
+						'thisHour': stopHour,
+						'thisMinute': stopMinute
+					}
+				%}
+				{% endembed %}
+			</div>
+			<p>&nbsp;</p>
+			<div class="row">
+				<div class="col-xs-12">
+					<button type="submit" class="btn btn-success btn-success-outline btn-block">Lagre</button>
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock %}

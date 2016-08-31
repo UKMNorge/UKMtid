@@ -34,9 +34,10 @@ class WorkService {
 		$repo = $this->doctrine->getRepository("UKMTidBundle:Holiday");
 		$holidaysThisMonth = $repo->getHolidays($year, $month);
 
-		if ( ( null == $holidaysThisMonth ) && ( false == $this->options->get('holiday_loaded_'.$year) ) ) {
-			$this->_load_holidays($year);	
-			$holidaysThisMonth = $repo->getHolidays($year, $month);
+		if ( null == $holidaysThisMonth ) {
+			return 0;
+			#throw new Exception('Deprecated!');
+			#$holidaysThisMonth = $repo->getHolidays($year, $month);
 		}	
 
 		// Here we have holidays loaded.
@@ -83,6 +84,10 @@ class WorkService {
 		return $minutes;
 	}
 
+	public function getWeekdaysForMonth($month, $year) {
+		return $this->workdays_in_month($year, $month);
+	}
+
 	public function workdays_in_month($year, $month) {
 		$days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 		$first_day = (int) date('N', mktime(0,0,0, $month, 1, $year ) );
@@ -100,38 +105,5 @@ class WorkService {
 		return $workdays_in_first_week + ($full_weeks*5) + $workdays_in_last_week;
 	}
 
-	private function _load_holidays( $year ) {
-		$curl = new UKMCURL();
-		#$url = $this->option->get('holiday_url');
-		$result = $curl->process('https://webapi.no/api/v1/holydays/2016');
-
-		$holidays = array();
-		$em = $this->doctrine->getManager();
-		$repo = $this->doctrine->getRepository("UKMTidBundle:Holiday");
-
-		foreach ($result->data as $holiday) {
-			$dato = new DateTime($holiday->date);
-
-			# Sjekk om helligdagen finnes i databasen fra før
-			if ($repo->findOneBy(array("date" => $dato))) {
-				# TODO: Mulig slett eller oppdater data her
-				continue;
-			}
-
-			# Hvis ukedagen er helg (0 = søndag, 6 = lørdag), hopp over.
-			if (0 < $dato->format("w") && $dato->format("w") < 6) {
-				$h = new Holiday();
-				$h->setDate($dato);
-				$h->setMonth($dato->format("n"));
-				$h->setYear($dato->format("Y"));
-				$h->setName($holiday->description);
-
-				$em->persist($h);
-			}
-		}
-
-		$em->flush();
-		## WHEN DONE
-		#$this->options->set('holiday_loaded_'.$year, true);
-	}	
+	
 }

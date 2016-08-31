@@ -10,7 +10,30 @@ namespace UKMNorge\TidBundle\Repository;
  */
 class MonthRepository extends \Doctrine\ORM\EntityRepository
 {
-	public function getUserMonth($user, $month, $year) {
-		return $this->findOneBy(array('user' => $user, 'month' => $month, 'year' => $year));
+	public function getUserMonth($user, $month) {
+		return $this->findOneBy(array('user' => $user, 'month' => $month));
+	}
+
+	// TODO: Change query to a month newer than max_month - maybe add month_int?
+	public function getYearTotal($user, $max_month, $year) {
+		#dump($user);
+		#dump($max_month);
+		#dump($year);
+
+		$qry = $this->createQueryBuilder('m')
+					->join('m.month', 'bm')
+					->andWhere('bm.year = :year')
+					->setParameter('year', $year)
+					->andWhere('bm.month <= :month')
+					->setParameter('month', $max_month)
+					->andWhere('m.user = :user')
+					->setParameter('user', $user->getId())
+					->select('SUM(m.worked)')
+					->getQuery();
+
+		#dump($qry);
+		#dump($qry->getSQL());
+		#dump($qry->getParameters());
+		return $qry->getSingleScalarResult();
 	}
 }

@@ -37,16 +37,13 @@ class UserService {
 	    #var_dump($current);
 	    # Hvis dette ikke er deg selv;
 	    if($currentUser->getId() != $id) {
-	    	# Er enten super-admin;
-	    	if ($this->container->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
-	    		throw new Exception('Not implemented, super admin');
+	    	# og du ikke er enten super-admin;
+	    	if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
+	    		throw $this->container->createAccessDeniedException();
 	    	} 
 	    	# Eller department manager for riktig department.
 	    	elseif($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-	    		throw new Exception('Not implemented, role_admin');
-	    	}
-	    	else {
-	    		echo $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
+	    		// TODO: Sjekk at brukeren er department-leader for brukeren vi prøver å få tak i sin Department.
 	    		throw $this->container->createAccessDeniedException();
 	    	}
 	    }
@@ -150,6 +147,16 @@ class UserService {
 			$valid = true;
 
 		return $valid;
+	}
+
+	public function setExcludeHolidays(User $user, $value) {
+		if(!is_bool($value))
+			throw new Exception('UKMTidBundle: excludeHolidays må være en boolsk verdi.');
+		$user->setExcludeHolidays($value);
+
+		$this->doctrine->getManager()->persist($user);
+		$this->doctrine->getManager()->flush();
+		return true;
 	}
 
 	public function setPercentage(User $user, $percentage) {

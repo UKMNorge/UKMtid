@@ -10,10 +10,35 @@ app:
     resource: "@UKMTidBundle/Controller/"
     type:     annotation
 
+ukm_tid_register:
+    path: /
+    defaults: { _controller: UKMTidBundle:User:register }
+
+ukm_tid_validering:
+    path: /validate/
+    defaults: { _controller: UKMTidBundle:User:validateInfo }
+
+ukm_tid_edit:
+    path: /edit/{id}
+    defaults: { _controller: UKMTidBundle:User:edit }
+    requirements:
+        id: '^[0-9]*$'
+
+ukm_tid_saveEdit:
+    path: /edit/save/
+    defaults: { _controller: UKMTidBundle:User:saveEdit }
+    methods: [POST]
+
+
+#################
+###  ADMINS   ### 
 ukm_tid_employees:
     path: /users/
     defaults: { _controller: UKMTidBundle:Users:list }
 
+#################
+### SUPERUSER ###
+#################
 ukm_tid_employees_disabled:
     path: /superuser/disabled/
     defaults: { _controller: UKMTidBundle:SuperUser:listDisabled }
@@ -38,10 +63,15 @@ ukm_tid_users_setPercentage:
     defaults: { _controller: UKMTidBundle:SuperUser:setPercentage }
     methods: [POST]
 
+ukm_tid_superuser_setExcludeHolidays:
+    path: /superuser/excludeHolidays/
+    defaults: { _controller: UKMTidBundle:SuperUser:excludeHolidays }
+    methods: [POST]
+
 ukm_tid_superuser_admin:
     path: /superuser/
     defaults: { _controller: UKMTidBundle:SuperUser:admin }
 
-ukm_tid_validering:
-    path: /validate/
-    defaults: { _controller: UKMTidBundle:User:validateInfo }
+ukm_tid_superuser_rekalkuler:
+    path: /superuser/rekalkuler/
+    defaults: { _controller: UKMTidBundle:SuperUser:rekalkuler }

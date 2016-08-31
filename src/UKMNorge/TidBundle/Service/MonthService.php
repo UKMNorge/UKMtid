@@ -17,15 +17,16 @@ class MonthService {
 		$this->doctrine = $container->get('doctrine');
 		$this->em = $this->doctrine->getManager();
 		$this->repo = $this->doctrine->getRepository("UKMTidBundle:Month");
+		$this->baseMonthService = $container->get('UKM.baseMonth');
 		$this->logger = $this->container->get('logger');
 	}
 
 	public function get(User $user, $month, $year) {
-		$m = $this->repo->getUserMonth($user, $month, $year);
+		$bm = $this->baseMonthService->get($month, $year);
+		$m = $this->repo->getUserMonth($user, $bm);
 		// Hvis brukeren ikke har noe data?
 		if(null == $m)
 			$m = $this->addMonth($user, $month, $year);
-
 		return $m;
 		#throw new Exception("Brukeren har ikke noe data registrert i denne måneden");
 	}
@@ -61,8 +62,11 @@ class MonthService {
 			throw new Exception('Unsupported format '. $format .' requested' );
 		}
 		
-		$month = $this->get($user, $month, $year);
-		$minutes = $month->getWorked() - $month->getToWork();
+		#$m = $this->get($user, $month, $year);
+		#$minutes = $m->getWorked() - $this->getMinutesToWork($user, $month, $year);
+
+		$minutes = $this->getYearTotal($user, $month, $year);
+		#dump($minutes);
 		return $this->container->get('UKM.format')->$format( $minutes );
 	}
 
@@ -77,40 +81,26 @@ class MonthService {
 		return $this->container->get('UKM.format')->$format( $m->getWorked() );
 	}
 
-	// TODO: LOGIC
-	# Skal returnere planlagt antall arbeidstimer.
-	public function getToWork(User $user, $month, $year, $format='minutes' ) {
+	public function getToWork(User $user, $month, $year, $format ='minutes') {
 		if( !$this->container->get('UKM.format')->isSupported('time', $format ) ) {
 			throw new Exception('Unsupported format '. $format .' requested' );
 		}
-		# Timing info
-		if ($this->container->has('debug.stopwatch')) {
-    		$stopwatch = $this->container->get('debug.stopwatch');
-    		$stopwatch->start('MonthService->getToWork()');
-		}
-
-		$m = $this->get($user, $month, $year);
-		$minutes = $m->getToWork();
-
-		# TODO: Move this?
-		# If we don't have the value, find it and cache it / store it on the object.
-		if (null == $minutes) {
-			$minutes = $this->findToWork($month, $year);	
-			$m->setToWork($minutes);
-			$em = $this->doctrine->getManager();
-			$em->persist($m);
-			$em->flush();
-		}
-
-		$minutes = $minutes * $user->getPercentage();
-		$minutes = $minutes / 100;
-
-		if ($this->container->has('debug.stopwatch')) {
-    		$stopwatch = $this->container->get('debug.stopwatch');
-    		$stopwatch->stop('MonthService->getToWork()');
-		}
-		#$minutes = ($this->findToWork($month, $year) * ($user->getPercentage()/100));
+		$minutes = $this->getMinutesToWork($user, $month, $year);
 		return $this->container->get('UKM.format')->$format($minutes);
+
+	}
+
+	public function getMinutesToWork(User $user, $month, $year) {
+		$bm = $this->baseMonthService->get($month, $year);
+		$minutes = $bm->getToWork() * ($user->getPercentage() / 100);
+		if(false == $user->getExcludeHolidays())
+			$minutes = $minutes - $bm->getHolidayMinutes();
+
+		return $minutes;
+	}
+
+	private function getUserWorkedTotal(User $user, $currentMonth, $year) {
+		return $this->repo->getYearTotal($user, $currentMonth, $year);
 	}
 
 	public function addNewInterval(User $user, $year, $month, $day, $hour, $minute) {
@@ -144,37 +134,41 @@ class MonthService {
 
 	private function addMonth(User $user, $month, $year) {
 		$em = $this->doctrine->getManager();
-		$toWork = $this->findToWork($month, $year);
+
+		$bm = $this->baseMonthService->get($month, $year);
 
 		$m = new Month();
 		$m->setUser($user)
-			->setMonth($month)
-			->setYear($year)
-			->setWorked(0)
-			->setToWork($toWork);
+			->setMonth($bm)
+			#->setYear($year)
+			->setWorked(0);
 		
 		$em->persist($m);
 		$em->flush();
 		return $m;
 	}
 
-	// TODO:
-	private function findToWork($month, $year) {
-		if ($this->container->has('debug.stopwatch')) {
-    		$stopwatch = $this->container->get('debug.stopwatch');
-    		$stopwatch->start('MonthService->findToWork()');
-		}
 
-		$workServ = $this->container->get('UKM.work');
-		$minutes = $workServ->getTotalWorkMinutesForMonth($month, $year);
-		#var_dump($minutes);
-		#throw new Exception("MinutesToWork: ". $minutes);
-		if ($this->container->has('debug.stopwatch')) {
-    		$stopwatch = $this->container->get('debug.stopwatch');
-    		$stopwatch->stop('MonthService->findToWork()');
-		}
-		return $minutes;
-		#return 450;
+
+	public function getYearTotal(User $user, $currentMonth, $year) {
+		list($toWork, $holidayMinutes) = $this->doctrine->getRepository("UKMTidBundle:BaseMonth")->getYearTotal($currentMonth, $year);
+		#dump($res);
+		#$toWork = $res[0][1];
+		#$holidayMinutes = $res[0][2];
+		#$toWork = $res[''];
+		#list($toWork, $holidayMinutes);
+		$userWorked = $this->getUserWorkedTotal($user, $currentMonth, $year);
+		#dump($userWorked);
+		#dump($toWork);
+		#dump($holidayMinutes);
+		$userToWork = $toWork * ($user->getPercentage() / 100);
+		#dump($userToWork);
+		$minutes = $userWorked - $userToWork;
+		#dump($minutes);
+		if($user->getExcludeHolidays())
+			return $minutes;
+		return $minutes - $holidayMinutes;
 	}
+	
 
 }

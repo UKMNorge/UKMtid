@@ -1,0 +1,61 @@
+
+<input type="hidden" name="interval_id" id="interval_id" value="{{ interval.getId() }}">
+<div class="row">
+	<div class="form-group col-xs-4">
+		<select class="form-control" name="stopDay" id="stopDay">
+			{% for day in 1 .. days %}
+				<option value="{{ day }}" {% if day == today %} selected {% endif %}
+					>{{ day }}</option>
+			{% endfor %}
+			{# <option value="01">01</option>
+			<option value="02">02</option> #}
+		</select>
+	</div>
+	<div class="form-group col-xs-5">
+		<select class="form-control" name="stopMonth" id="stopMonth">
+			{% for month, name in months %}
+				<option value="{{ month }}" 
+				{% if month == thisMonth %} selected {% endif %}>
+					{{ name }}
+				</option>
+			{% endfor %}
+			{# <option value="01">jan</option>
+			<option value="02">feb</option> #}
+		</select>
+	</div>
+
+	<div class="form-group col-xs-3">
+		<select class="form-control" name="stopYear" id="stopYear">
+			{% for year in years %}
+				<option value="{{ year }}"
+				{% if year == thisYear %} selected {% endif %}>
+					{{ year }}
+				</option>
+			{% endfor %}
+		</select>
+	</div>
+</div>
+<div class="row">
+	<div class="form-group col-xs-6">
+		<select class="form-control form-control-lg" name="stopHour" id="stopHour">
+			{% for hour in 0 .. 23 %}
+				<option value="{{ hour }}"
+				{% if hour == thisHour %} selected {% endif %}>
+					{{ hour }}
+				</option>
+			{% endfor %}
+		</select>
+	</div>
+	
+	<div class="form-group col-xs-6">
+		<select class="form-control form-control-lg" name="stopMin" id="stopMin">
+			{% for minute in 0 .. 59 %}
+				<option value="{{ minute }}"
+				{% if minute == thisMinute %} selected {% endif %}>
+					{{ minute }}
+				</option>
+			{% endfor %}
+		</select>
+	</div>
+
+</div>
