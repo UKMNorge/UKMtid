@@ -10,11 +10,12 @@
 		{# TODO: Kan dette gjøres sånn, eller må alle interaksjoner med objekt gå gjennom en service? #}
 			{% embed 'UKMTidBundle::User/stopform.html.twig' with
 				{
-					'today': iServ.getCurrentDay,
+					'today': iServ.getDayFromInterval(interval),
 					'days': mServ.findDaysInMonth(iServ.getCurrentMonth, iServ.getCurrentYear),
-					'thisMonth': iServ.getCurrentMonth,
+					'thisMonth': iServ.getMonthFromInterval(interval),
 					'months': iServ.getMonths,
-					'thisYear': iServ.getCurrentYear,
+					'thisYear': iServ.getYearFromInterval(interval),
+					'years': iServ.getAvailableYears(),
 					'thisHour': iServ.getCurrentHour,
 					'thisMinute': iServ.getCurrentMinute
 				}
