@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="form-group col-xs-4">
 		<select class="form-control" name="day" id="startDay">
-			{% for day in 1 .. days %}
+			{% for day in 1 .. 31 %}
 				<option value="{{ day }}" {% if day == today %} selected {% endif %}>{{ day }}</option>
 			{% endfor %}
 		</select>
