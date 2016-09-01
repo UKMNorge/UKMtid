@@ -2022,11 +2022,11 @@
         },
         {
             "name": "ukmnorge/ukmdipbundle",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/UKMNorge/UKMDipBundle.git",
-                "reference": "3d8eab8474d8a7ff1c7bec214fa00bf8d882ab3b"
+                "reference": "7920249d777faeb5cb64e5d2366746104ea8e48b"
             },
             "require": {
                 "friendsofsymfony/user-bundle": "~2.0@dev"
@@ -2046,7 +2046,7 @@
             ],
             "description": "Simple authentication for UKM services",
             "homepage": "http://github.com/UKMNorge/UKMDipBundle",
-            "time": "2016-08-24 12:19:16"
+            "time": "2016-08-30 16:50:43"
         }
     ],
     "packages-dev": [
