@@ -24,10 +24,8 @@ class WorkService {
 	public function getTotalWorkMinutesForMonth($month, $year) {
 		$holidayMinutes = $this->getHolidayMinutesForMonth($month, $year);
 		$weekdayMinutes = $this->getWeekdayMinutesForMonth($month, $year);
-		#echo $weekdayMinutes;
-		#echo $holidayMinutes;
+		
 		return $weekdayMinutes - $holidayMinutes;
-		### OOPS - HUSK Å LASTE INN KALENDER OG TELL ANTALL ARBEIDSDAGER/MINUTTER I MÅNEDEN.
 	}
 
 	public function getHolidayMinutesForMonth($month, $year) {
@@ -36,8 +34,6 @@ class WorkService {
 
 		if ( null == $holidaysThisMonth ) {
 			return 0;
-			#throw new Exception('Deprecated!');
-			#$holidaysThisMonth = $repo->getHolidays($year, $month);
 		}	
 
 		// Here we have holidays loaded.
@@ -45,42 +41,28 @@ class WorkService {
 		foreach($holidaysThisMonth as $holiday) {
 			$minutes += $holiday->getTimeOff();
 		}
-		#throw new Exception($minutes);
+
 		return $minutes;
 	}
 
 	public function getWeekdayMinutesForMonth($month, $year ) {
 		$curl = new UKMCURL();
-		#$url = $this->option->get('holiday_url');
 		$result = $curl->process('https://webapi.no/api/v1/calendar/2016');
 
-		#echo '<b>DUMP:</b><br>';
-		#echo 'Month: '.$month.'<br>';
-		#echo 'Year: '.$year.'<br>';
-		#echo '<pre>'.var_export($result->data->months[$month-1]).'</pre>';
-		#echo '<br>';
 		$minutes = 0;
-		#$weekendMinutes = 0;
-		#$numWeekDays = 0;
+		
 		# For alle dager i gitt måned
 		foreach ($result->data->months[$month-1]->days as $day) {
 			# Hvis dagen er helg, hopp over.
 			if ($day->name == "Saturday" || $day->name == "Sunday") {
-				#throw new Exception("Data: ".$day->name);
-				#$weekendMinutes += 450;
 				continue;
 			}
 			# Ellers, tell minuttene herfra. 
 			else {
-				#echo '<br>';
-				#var_dump($day);
 				$minutes += 450; # Full arbeidsdag i minutt; 7.5*60
-				#$numWeekDays++;
 			}
 		}
-		#var_dump($numWeekDays);
-		#throw new Exception("Minutes: ".$minutes);
-		#throw new Exception("WeekendMinutes: ".$weekendMinutes);
+		
 		return $minutes;
 	}
 

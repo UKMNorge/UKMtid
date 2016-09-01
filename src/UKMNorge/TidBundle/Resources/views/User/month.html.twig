@@ -31,7 +31,7 @@
 				<ol class="list-group">
 					<li class="list-group-item alert-success">
 						<div class="row">
-							<div class="col-xs-8"><b>STATUS</b></div>
+							<div class="col-xs-8"><b>STATUS I SLUTTEN AV {{ bmServ.monthToNiceName(selected_month)|upper }}</b></div>
 							<div class="col-xs-4" align="right">{{ UKMmonth.getUserStatus( selected_user, selected_month, selected_year, 'hours') }}</div>
 						</div>
 						<div class="row">
@@ -88,7 +88,7 @@
 			
 			<ol class="list-group">
 				{% for interval in mServ.getAllIntervalsInMonth(selected_user, selected_month, selected_year) %}
-					<li class="list-group-item interval_box" style="li { cursor: pointer; cursor: hand; }">
+					<li class="list-group-item interval_box" style="cursor: pointer; cursor: hand;">
 						<input type="hidden" id="interval_id" value="{{ interval.getId() }}">
 						<div class="row">
 							<div class="col-xs-2" align="center"><b>{{ iServ.getDayFromInterval(interval) }}</b><br /><small>{{ iServ.getDayNameFromInterval(interval) }}</small></div>

@@ -8,9 +8,7 @@ use UKMNorge\TidBundle\Entity\User;
 use UKMNorge\TidBundle\Entity\Month;
 use UKMNorge\TidBundle\Entity\Interval;
 
-# TODO: Restrukturer og gjør ting mer oversiktlig - veldig convoluted her, vil man ikke gjøre så mye som mulig på objektet??
-
-
+# TODO: Restrukturer og gjør ting mer oversiktlig.
 class MonthService {
 	public function __construct( $container ) {
 		$this->container = $container;
@@ -28,14 +26,32 @@ class MonthService {
 		if(null == $m)
 			$m = $this->addMonth($user, $month, $year);
 		return $m;
-		#throw new Exception("Brukeren har ikke noe data registrert i denne måneden");
 	}
 
 	public function getAllIntervalsInMonth(User $user, $month, $year) {
-		#$m = $this->repo->findBy(array('user'=> $user, 'month' => $month, 'year' => $year));
 		$m = $this->get($user, $month, $year);
 		return $m->getIntervals();
 
+	}
+
+	// Beregner antall minutter worked ut fra alle intervall i en gitt måned.
+	public function rekalkulerMinutter($user, $month, $year) {
+		$iServ = $this->container->get('UKM.interval');
+		$m = $this->get($user, $month, $year);
+		$intervals = $this->doctrine->getRepository("UKMTidBundle:Interval")->getAllIntervalsInMonth($m);
+
+		$workedNew = 0;
+		foreach($intervals as $interval) {
+			$workedNew += $iServ->getMinutesWorkedFromInterval($interval);
+		}
+
+		if($workedNew != $m->getWorked()) {
+			$this->logger->info('UKMTidBundle: Oppdaterer antall minutter arbeidet i måned med id '.$m->getId(). ' fra '.$m->getWorked().' til '.$workedNew.'.');
+			$m->setWorked($workedNew);
+			$this->em->persist($m);
+			// TODO: Trenger vi å flushe her?
+			# $this->em->flush();
+		}
 	}
 
 	public function addToUserWorked(Interval $interval) {
@@ -61,9 +77,6 @@ class MonthService {
 		if( !$this->container->get('UKM.format')->isSupported('time', $format ) ) {
 			throw new Exception('Unsupported format '. $format .' requested' );
 		}
-		
-		#$m = $this->get($user, $month, $year);
-		#$minutes = $m->getWorked() - $this->getMinutesToWork($user, $month, $year);
 
 		$minutes = $this->getYearTotal($user, $month, $year);
 		#dump($minutes);
@@ -155,15 +168,12 @@ class MonthService {
 			->getRepository("UKMTidBundle:BaseMonth")
 			->getYearTotal($currentMonth, $year);
 		#dump($res);
-		#$toWork = $res[0][1];
-		#$holidayMinutes = $res[0][2];
-		#$toWork = $res[''];
-		#list($toWork, $holidayMinutes);
 		$userWorked = $this->getUserWorkedTotal($user, $currentMonth, $year);
-		#dump($userWorked);
-		#dump($toWork);
-		#dump($holidayMinutes);
+		#dump($userWorked); 
+		#dump($toWork); // Test, should be 9900
+		#dump($holidayMinutes); // Test, should be 1350
 		$userToWork = $toWork * ($user->getPercentage() / 100);
+		
 		#dump($userToWork);
 		$minutes = $userWorked - $userToWork;
 		#dump($minutes);

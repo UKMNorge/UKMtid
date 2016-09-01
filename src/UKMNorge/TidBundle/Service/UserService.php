@@ -6,10 +6,6 @@ use Exception;
 use UKMNorge\TidBundle\Entity\User;
 
 class UserService {
-	// Tid:
-	// #1 88ms
-	// #2 45ms
-	// #4 22ms
 	public function __construct($doctrine, $container) {
 		$this->timer = $container->get('UKM.timer');
 		$this->timer->start('UserService::__construct()');
@@ -22,8 +18,6 @@ class UserService {
 	}
 
 	public function isLoggedIn() {
-		#$role = $this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED');
-		#dump($role);
 		// TODO: Hvorfor looper denne når man ikke er innlogget? (/validate)
 		$this->logger->info('UKMTidBundle: Sjekker om brukeren er logget inn...');
 		$isLoggedIn = $this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED');
@@ -34,7 +28,6 @@ class UserService {
 	public function get( $id ) {
 		$currentUser = $this->getCurrent();
 
-	    #var_dump($current);
 	    # Hvis dette ikke er deg selv;
 	    if($currentUser->getId() != $id) {
 	    	# og du ikke er enten super-admin;
@@ -97,11 +90,7 @@ class UserService {
 		if(!is_object($user)) {
 			$user = $this->getByDeltaId($user);
 		}
-#		if(!$this->isValid($user)) {
-#			$errorMsg = 'UKMTidBundle: Denne brukeren er ikke gyldig (Delta-ID '.$user->getDeltaId().').';
-#			$this->logger->info($errorMsg);
-#			throw new Exception($errorMsg);
-#		}
+
 		return $user;
 	}
 
@@ -117,13 +106,13 @@ class UserService {
 
 	public function getUsers() {
 		if( $this->getCurrent()->isSuperUser() ) {
-			// Uses more memory, but supports timers. Better version below
 			$this->timer->start('getUsers');
+			
 			$users = $this->repo->findAll(); 
+			
 			$this->timer->stop('getUsers');
 
 			return $users;
-			#return $this->repo->findAll();
 		}
 		else throw new Exception('UKMTidBundle: User not allowed to list all users. Need to be superuser.');
 	}

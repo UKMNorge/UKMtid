@@ -2,7 +2,8 @@
 
 namespace UKMNorge\TidBundle\Repository;
 
-use UKMNorge\TidBundle\User;
+use UKMNorge\TidBundle\Entity\User;
+use UKMNorge\TidBundle\Entity\Month;
 
 /**
  * IntervalRepository
@@ -24,4 +25,9 @@ class IntervalRepository extends \Doctrine\ORM\EntityRepository
 
 	}
 
+	public function getAllIntervalsInMonth(Month $month) {
+		$ivals = $this->findBy(array('month' => $month)); 
+		#dump($ivals);
+		return $ivals;
+	}
 }

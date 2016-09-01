@@ -14,7 +14,6 @@ class MonthRepository extends \Doctrine\ORM\EntityRepository
 		return $this->findOneBy(array('user' => $user, 'month' => $month));
 	}
 
-	// TODO: Change query to a month newer than max_month - maybe add month_int?
 	public function getYearTotal($user, $max_month, $year) {
 		#dump($user);
 		#dump($max_month);

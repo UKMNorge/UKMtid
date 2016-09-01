@@ -28,8 +28,13 @@ class IntervalService {
 
 	// Hent det nyeste intervallet som ikke er stoppet.
 	public function getCurrentInterval(User $user) {
-		#throw new Exception("STOP");
-		return $this->repo->findOneBy(array("userid" => $user->getId(), "stop" => null), array('start' => 'DESC'));
+		return $this->repo->findOneBy(
+			array(
+				"userid" => $user->getId(), 
+				"stop" => null),
+			array(
+				'start' => 'DESC')
+		);
 	}
 
 	public function get($id) {
@@ -45,6 +50,21 @@ class IntervalService {
 		// TODO: Persist the interval or don't bother?
 
 		return $interval;
+	}
+
+	public function updateInterval(Interval $interval, DateTime $start, DateTime $stop) {
+		$interval->setStartDateTime($start);
+        $interval->setStopDateTime($stop);
+
+        $user = $interval->getMonth()->getUser();
+
+        $this->em->persist($interval);
+
+        // Rekalkuler minutter i måneden
+        $this->mServ->rekalkulerMinutter($user, $this->getMonthFromInterval($interval), $this->getYearFromInterval($interval));
+        $this->doctrine->getManager()->flush();
+
+        return true;
 	}
 
 	public function isStopped(Interval $interval) {

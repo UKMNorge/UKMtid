@@ -231,13 +231,8 @@ class UserController extends Controller
         $stop->setDate($year, $month, $day);
         $stop->setTime($hour, $minute);
 
-
         // Do actual save:
-        $interval->setStartDateTime($start);
-        $interval->setStopDateTime($stop);
-
-        $this->getDoctrine()->getManager()->persist($interval);
-        $this->getDoctrine()->getManager()->flush();
+        $iServ->updateInterval($interval, $start, $stop);
 
         // Finish up - redirect to overview
         $data = array();
@@ -250,7 +245,7 @@ class UserController extends Controller
     public function validateInfoAction(Request $request) {
 
         // Hvis brukeren både er valid og logget inn, redirect til framsiden?
-
+        
         $data = array();
         $data['uServ'] = $this->get('UKM.user');
         $data['isLoggedIn'] = $this->get('UKM.user')->isLoggedIn();

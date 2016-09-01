@@ -13,7 +13,6 @@ class BaseMonthService {
 		$this->timer = $timer;
 		$this->workService = $workService;
 		$this->holidayService = $holidayService;
-
 	}
 
 	public function get($month, $year) {
@@ -34,7 +33,6 @@ class BaseMonthService {
 			->setName($this->monthToNiceName($month))
 			->setWeekdays($this->workService->getWeekdaysForMonth($month, $year));
 		
-		dump($bm);
 		$this->doctrine->getManager()->persist($bm);
 		$this->rekalkulerMinutter($month, $year, $bm);
 
@@ -61,9 +59,9 @@ class BaseMonthService {
 	// TODO: Finn faktiske helligdager (i WorkService)
 	private function getHolidayMinutesForMonth($month, $year, $bm) {
 		$this->holidayService->load_holidays($month, $year, $bm);
-		dump($bm);
+		#dump($bm);
 		$holidays = $this->doctrine->getRepository("UKMTidBundle:Holiday")->findBy(array('month' => $bm));
-		dump($holidays);
+		#dump($holidays);
 		if(null == $holidays) {
 			return 0;
 		}
@@ -71,23 +69,14 @@ class BaseMonthService {
 		foreach ($holidays as $day) {
 			$minutes = $minutes + $day->getTimeOff();
 		}
-		dump($minutes);
 		return $minutes;
 	}
 
 	// TODO:
 	private function findToWork($bm, $month, $year) {
-		#$this->timer->start('findToWork()');
-
  		$weekMinutes = $bm->getWeekdays() * 450; # TODO: Move minutes per day (450) to a setting.
 
-		#$minutes = $this->workService->getTotalWorkMinutesForMonth($month, $year);
-		#var_dump($minutes);
-		#throw new Exception("MinutesToWork: ". $minutes);
-		#$this->timer->stop('findToWork()');
-
 		return $weekMinutes;
-		#return 450;
 	}
 
 	# Skal returnere planlagt antall arbeidsminutter.

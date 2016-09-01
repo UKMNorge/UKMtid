@@ -18,7 +18,6 @@ class HolidayService {
 
 	public function load_holidays( $month, $year, $basemonth ) {
 		$curl = new UKMCURL();
-		#$url = $this->option->get('holiday_url');
 		$result = $curl->process('https://webapi.no/api/v1/holydays/2016');
 
 		$holidays = array();
@@ -52,10 +51,7 @@ class HolidayService {
 				$em->persist($h);
 			}
 		}
-
+		
 		$em->flush();
-		## WHEN DONE
-		#$this->options->set('holiday_loaded_'.$year, true);
-
 	}	
 }
