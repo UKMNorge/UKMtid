@@ -151,7 +151,9 @@ class MonthService {
 
 
 	public function getYearTotal(User $user, $currentMonth, $year) {
-		list($toWork, $holidayMinutes) = $this->doctrine->getRepository("UKMTidBundle:BaseMonth")->getYearTotal($currentMonth, $year);
+		list($toWork, $holidayMinutes) = $this->doctrine
+			->getRepository("UKMTidBundle:BaseMonth")
+			->getYearTotal($currentMonth, $year);
 		#dump($res);
 		#$toWork = $res[0][1];
 		#$holidayMinutes = $res[0][2];
@@ -167,7 +169,7 @@ class MonthService {
 		#dump($minutes);
 		if($user->getExcludeHolidays())
 			return $minutes;
-		return $minutes - $holidayMinutes;
+		return $minutes + $holidayMinutes;
 	}
 	
 
