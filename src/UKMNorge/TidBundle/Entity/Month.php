@@ -38,12 +38,6 @@ class Month
     private $month;
 
     /**
-     *
-     * @ORM\Column(name="year", type="integer")
-     */
-    private $year;
-
-    /**
      * @var int
      *
      * @ORM\Column(name="worked", type="integer", nullable=true)
