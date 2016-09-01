@@ -8,11 +8,12 @@ use Exception;
 
 class BaseMonthService {
 
-	public function __construct($doctrine, $timer, $workService, $holidayService) {
+	public function __construct($doctrine, $timer, $workService, $holidayService, $logger) {
 		$this->doctrine = $doctrine;
 		$this->timer = $timer;
 		$this->workService = $workService;
 		$this->holidayService = $holidayService;
+		$this->logger = $logger;
 	}
 
 	public function get($month, $year) {
@@ -27,6 +28,7 @@ class BaseMonthService {
 
 	// Oppretter en ny basemåned
 	private function create($month, $year) {
+		$this->logger->info('UKMTidBundle: BaseMonthService: Oppretter ny basismåned. M: '.$month. ', Y: '.$year.'.');
 		$bm = new BaseMonth();
 		$bm->setMonth($month)
 			->setYear($year)

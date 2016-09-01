@@ -35,6 +35,6 @@ services:
 
     UKM.baseMonth:
         class: UKMNorge\TidBundle\Service\BaseMonthService
-        arguments: ["@doctrine", "@UKM.timer", "@UKM.work", "@UKM.holiday"]
+        arguments: ["@doctrine", "@UKM.timer", "@UKM.work", "@UKM.holiday", "@logger"]
     # UKM.holiday:
     #     class: UKMNorge\TidBundle\TidBundle\HolidayService
