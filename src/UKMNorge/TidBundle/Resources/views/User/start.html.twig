@@ -3,7 +3,18 @@
 	<div class="container" id="registerStart" {% if false %} style="display:none;" {% endif %} >
 		<h2>Når startet du på jobb?</h2>
 		<form method="POST" action="{{ path('ukm_tid_start') }}">
-			{% embed 'UKMTidBundle::User/startform.html.twig' with { 'today': iServ.getCurrentDay(), 'days': mServ.findDaysInMonth(iServ.getCurrentMonth(), iServ.getCurrentYear()), 'thisMonth': iServ.getCurrentMonth(), 'months': iServ.getMonths(), 'thisYear': iServ.getCurrentYear(), 'years': iServ.getAvailableYears(), 'thisHour': iServ.getCurrentHour(), 'thisMinute': iServ.getCurrentMinute() } %}
+			{% embed 'UKMTidBundle::User/startform.html.twig' with 
+				{ 
+				'today': iServ.getCurrentDay(), 
+				'days': mServ.findDaysInMonth(iServ.getCurrentMonth(), iServ.getCurrentYear()), 
+				'thisMonth': iServ.getCurrentMonth(), 
+				'months': iServ.getMonths(), 
+				'thisYear': iServ.getCurrentYear(),
+				'years': iServ.getAvailableYears(), 
+				'thisHour': iServ.getCurrentHour(), 
+				'thisMinute': iServ.getCurrentMinute() 
+				} 
+			%}
 			{% endembed %}
 			<div class="row">
 				<div class="form-group col-xs-12">
