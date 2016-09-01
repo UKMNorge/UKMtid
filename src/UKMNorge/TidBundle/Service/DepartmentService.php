@@ -6,18 +6,14 @@ use UKMNorge\TidBundle\Entity\Department;
 use UKMNorge\TidBundle\Entity\User;
 
 class DepartmentService {
-	
-	/// HOLY SHIT THIS TAKES 301 ms!!!
-	/// Second-run: 109ms
-	/// Third: 255ms
-	/// Fourth: 127ms
-	/// Fifth: 62ms	
 	public function __construct($doctrine, $timer) {
 		$this->timer = $timer;
 		$this->timer->start('DepartmentService::__construct()');
+
 		$this->doctrine = $doctrine;
 		$this->em = $doctrine->getManager();
 		$this->repo = $doctrine->getRepository("UKMTidBundle:Department");
+
 		$this->timer->stop('DepartmentService::__construct()');
 	}
 
@@ -40,7 +36,7 @@ class DepartmentService {
 
 	public function addMember(Department $dep, User $user) {
 
-		// TODO: Sjekk om brukeren er en del av department fra før av
+		// TODO: Sjekk om brukeren er en del av department fra før av?
 
 		$dep->addMember($user);
 		$user->setDepartment($dep);

@@ -44,5 +44,6 @@ security:
         #- { path: ^/admin/, role: ROLE_ADMIN }
         # Tid:
         - { path: ^/user, role: ROLE_USER }
+        - { path: ^/edit, role: ROLE_USER }
         - { path: ^/users/, role: ROLE_ADMIN }
         - { path: ^/superuser/, role: ROLE_SUPER_ADMIN }

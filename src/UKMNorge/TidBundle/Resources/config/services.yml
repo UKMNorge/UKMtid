@@ -23,11 +23,18 @@ services:
 
     UKM.interval:
         class: UKMNorge\TidBundle\Service\IntervalService
-        arguments: ["@doctrine", "@UKM.month", "@UKM.format", "@UKM.timer"]
+        arguments: ["@service_container"]
 
     UKM.department:
         class: UKMNorge\TidBundle\Service\DepartmentService
         arguments: ["@doctrine", "@UKM.timer"]
 
+    UKM.holiday:
+        class: UKMNorge\TidBundle\Service\HolidayService
+        arguments: ["@doctrine", "@UKM.timer"]
+
+    UKM.baseMonth:
+        class: UKMNorge\TidBundle\Service\BaseMonthService
+        arguments: ["@doctrine", "@UKM.timer", "@UKM.work", "@UKM.holiday"]
     # UKM.holiday:
     #     class: UKMNorge\TidBundle\TidBundle\HolidayService

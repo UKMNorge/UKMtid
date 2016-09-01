@@ -31,7 +31,13 @@ class Month
     private $user;
 
     /**
-     * @var int
+     * 
+     *
+     * @ORM\ManyToOne(targetEntity="BaseMonth")
+     */
+    private $month;
+
+    /**
      *
      * @ORM\Column(name="year", type="integer")
      */
@@ -40,23 +46,9 @@ class Month
     /**
      * @var int
      *
-     * @ORM\Column(name="month", type="integer")
-     */
-    private $month;
-
-    /**
-     * @var int
-     *
      * @ORM\Column(name="worked", type="integer", nullable=true)
      */
     private $worked;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="toWork", type="integer", nullable=true)
-     */
-    private $toWork;
 
     // class Month:
     /**
@@ -68,6 +60,7 @@ class Month
     public function __construct() {
          $this->intervals = new ArrayCollection();
     }
+    
     /**
      * Get id
      *
@@ -129,13 +122,11 @@ class Month
     /**
      * Set month
      *
-     * @param integer $month
-     *
      * @return Month
      */
-    public function setMonth($month)
+    public function setMonth($baseMonth)
     {
-        $this->month = $month;
+        $this->month = $baseMonth;
 
         return $this;
     }
@@ -148,30 +139,6 @@ class Month
     public function getMonth()
     {
         return $this->month;
-    }
-
-    /**
-     * Set monthName
-     *
-     * @param string $monthName
-     *
-     * @return Month
-     */
-    public function setMonthName($monthName)
-    {
-        $this->monthName = $monthName;
-
-        return $this;
-    }
-
-    /**
-     * Get monthName
-     *
-     * @return string
-     */
-    public function getMonthName()
-    {
-        return $this->monthName;
     }
 
     /**
@@ -196,30 +163,6 @@ class Month
     public function getWorked()
     {
         return $this->worked;
-    }
-
-    /**
-     * Set toWork
-     *
-     * @param integer $toWork
-     *
-     * @return Month
-     */
-    public function setToWork($toWork)
-    {
-        $this->toWork = $toWork;
-
-        return $this;
-    }
-
-    /**
-     * Get toWork
-     *
-     * @return int
-     */
-    public function getToWork()
-    {
-        return $this->toWork;
     }
 
     /**

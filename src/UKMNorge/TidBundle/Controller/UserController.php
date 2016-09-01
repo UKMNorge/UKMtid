@@ -8,13 +8,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Exception;
+use DateTime;
 use UKMNorge\TidBundle\Entity\Interval;
 
 class UserController extends Controller
 {	
-	/**
-	 * @Route("/", name="ukm_tid_register")
-	 */
     public function registerAction()
     {	
     	$userServ = $this->get('UKM.user');
@@ -68,11 +66,11 @@ class UserController extends Controller
     	$params = $request->request;
 
     	$interval = $repo->findOneBy(array('id' => $params->get('interval_id')));
-    	$year = $params->get('year');
-    	$month = $params->get('month');
-    	$day = $params->get('day');
-    	$hour = $params->get('hour');
-    	$minute = $params->get('minute');
+    	$year = $params->get('stopYear');
+    	$month = $params->get('stopMonth');
+    	$day = $params->get('stopDay');
+    	$hour = $params->get('stopHour');
+    	$minute = $params->get('stopMin');
 
     	#dump($interval);
     	$iServ->stopInterval($interval, $year, $month, $day, $hour, $minute);
@@ -159,6 +157,7 @@ class UserController extends Controller
 	    #throw new Exception("Stop");
 		$data = array();
 		$data['mServ'] = $monthServ;
+        $data['bmServ'] = $this->get('UKM.baseMonth');
 		$data['iServ'] = $iServ;
 		$data['format'] = $this->get('UKM.format');
 		$data['selected_user'] = $user;
@@ -166,11 +165,87 @@ class UserController extends Controller
 		$data['selected_year'] = $year;
 	    return $this->render('UKMTidBundle:User:month.html.twig', $data);
     }
+
+    public function editAction(Request $request) {
+        $iServ = $this->get('UKM.interval');
+        $mServ = $this->get('UKM.month');
+
+        #$interval = $iServ->get($id);
+        $id = $request->get('id');
+        #dump($id);
+        $interval = $iServ->get($id);
+
+        if(!is_object($interval)) {
+            throw new Exception('UKMTidBundle: Klarte ikke å hente intervallet du spør om!');
+        }
+        $month = $iServ->getMonthFromInterval($interval);
+        $year = $iServ->getYearFromInterval($interval);
+        $data = array();
+
+        $data['editing'] = true;
+        $data['interval'] = $interval;
+
+        $data['today'] = $iServ->getDayFromInterval($interval);
+        $data['days'] = $mServ->findDaysInMonth($month, $year);
+        $data['thisMonth'] = $month;
+        $data['months'] = $iServ->getMonths();
+        $data['thisYear'] = $year;
+        $data['years'] = $iServ->getAvailableYears();
+        $data['thisHour'] = $iServ->getHourFromInterval($interval);
+        $data['thisMinute'] = $iServ->getStartMinuteFromInterval($interval);
+
+        $data['stopDay'] = $iServ->getStopDayFromInterval($interval);
+        $data['stopDays'] = $mServ->findDaysInMonth($month, $year);
+        $data['stopMonth'] = $month;
+        $data['stopYear'] = $year;
+        $data['stopHour'] = $iServ->getStopHourFromInterval($interval);
+        $data['stopMinute'] = $iServ->getStopMinuteFromInterval($interval);        
+        return $this->render('UKMTidBundle:User:edit.html.twig', $data);
+    }
+
+    public function saveEditAction(Request $request) {
+        $iServ = $this->get('UKM.interval');
+
+        $params = $request->request;
+        $interval = $this->getDoctrine()->getRepository("UKMTidBundle:Interval")->findOneBy(array('id' => $params->get('interval_id')));
+        
+        ## Start-tid:
+        $year = $params->get('year');
+        $month = $params->get('month');
+        $day = $params->get('day');
+        $hour = $params->get('hour');
+        $minute = $params->get('minute');
+
+        $start = new DateTime();
+        $start->setDate($year, $month, $day);
+        $start->setTime($hour, $minute);
+
+        ## Stopp-tid:
+        $year = $params->get('stopYear');
+        $month = $params->get('stopMonth');
+        $day = $params->get('stopDay');
+        $hour = $params->get('stopHour');
+        $minute = $params->get('stopMin');
+        
+        $stop = new DateTime();
+        $stop->setDate($year, $month, $day);
+        $stop->setTime($hour, $minute);
+
+        // Do actual save:
+        $iServ->updateInterval($interval, $start, $stop);
+
+        // Finish up - redirect to overview
+        $data = array();
+        $data['id'] = $this->get('UKM.user')->getCurrent()->getId();
+        $data['month'] = $month;
+        $data['year'] = $year;
+        return $this->redirectToRoute('ukm_tid_user', $data);
+    }
         
     public function validateInfoAction(Request $request) {
 
         // Hvis brukeren både er valid og logget inn, redirect til framsiden?
-
+        
         $data = array();
         $data['uServ'] = $this->get('UKM.user');
         $data['isLoggedIn'] = $this->get('UKM.user')->isLoggedIn();

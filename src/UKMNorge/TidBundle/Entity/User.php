@@ -53,6 +53,12 @@ class User extends BaseUser
     private $department;
 
     /**
+     *
+     * @ORM\Column(name="excludeHolidays", type="boolean", nullable=true)
+     */ 
+    private $excludeHolidays = false;
+
+    /**
      * Get id
      *
      * @return int
@@ -199,5 +205,29 @@ class User extends BaseUser
         } catch (Exception $e) {
             throw new Exception('UKMTidBundle:User.php:setData: En uventet feil oppsto ved lagring av data fra UKMdelta. ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Set excludeHolidays
+     *
+     * @param boolean $excludeHolidays
+     *
+     * @return User
+     */
+    public function setExcludeHolidays($excludeHolidays)
+    {
+        $this->excludeHolidays = $excludeHolidays;
+
+        return $this;
+    }
+
+    /**
+     * Get excludeHolidays
+     *
+     * @return boolean
+     */
+    public function getExcludeHolidays()
+    {
+        return $this->excludeHolidays;
     }
 }

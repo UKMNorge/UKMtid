@@ -2,7 +2,8 @@
 
 namespace UKMNorge\TidBundle\Repository;
 
-use UKMNorge\TidBundle\User;
+use UKMNorge\TidBundle\Entity\User;
+use UKMNorge\TidBundle\Entity\Month;
 
 /**
  * IntervalRepository
@@ -24,4 +25,22 @@ class IntervalRepository extends \Doctrine\ORM\EntityRepository
 
 	}
 
+	public function getAllIntervalsInMonth(Month $month) {
+		$ivals = $this->findBy(array('month' => $month)); 
+		return $ivals;
+	}
+
+	public function getCurrentInterval(User $user) {
+		$qry = $this->createQueryBuilder('i')
+			->join('i.month', 'm')
+			->andWhere('m.user = :user')
+			->andWhere('i.stop IS null')
+			->setParameter('user', $user->getId())
+			->orderBy('i.start', 'DESC')
+			->select('i')
+			->getQuery();
+
+		#dump($qry);
+		return $qry->getOneOrNullResult();
+	}
 }

@@ -29,7 +29,7 @@ class Holiday
     private $date;
 
     /**
-     * @ORM\Column(name="month", type="integer")
+     * @ORM\ManyToOne(targetEntity="BaseMonth", inversedBy="holidays")
      */
     private $month;
 

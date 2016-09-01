@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
+use Exception;
+
 class SuperUserController extends Controller
 {
     public function disabledAction()
@@ -25,11 +27,6 @@ class SuperUserController extends Controller
     public function newDepartmentAction(Request $request) {
         $dServ = $this->get('UKM.department');
         $uServ = $this->get('UKM.user');
-
-        // TODO: Fjern, dette håndteres jo av firewallen
-        if (!$uServ->isLoggedIn()) {
-            throw $this->createAccessDeniedException('You cannot access this page!');
-        }
 
         $name = $request->request->get('name');
         $dServ->addDepartment($name);
@@ -58,6 +55,32 @@ class SuperUserController extends Controller
         $percentage = $request->request->get('percentage');
 
     }  
+
+    // TODO: Not implemented properly - needed for dynamic holidays etc.
+    public function rekalkulerAction(Request $request) {
+        $bmServ = $this->get('UKM.baseMonth');
+        $bm = $bmServ->rekalkulerMinutter(8, 2016);
+
+
+        throw new Exception("Stop.");
+    }
+
+    public function excludeHolidaysAction(Request $request) {
+        $value = $request->request->get('excludeHolidays');
+        $uServ = $this->get('UKM.user');
+        $user = $uServ->get($request->request->get('user_id'));
+
+
+        try {
+            $res = $uServ->setExcludeHolidays($user, (bool)$value);
+            if($res)
+                $this->addFlash('success', 'Lagret endringer');
+        } catch(Exception $e) {
+            $this->addFlash('danger', "Klarte ikke å endre verdien på excludeHolidays til ".$value." for bruker ".$user->getName().".");
+        }
+        
+        return $this->redirectToRoute('ukm_tid_superuser_admin');
+    }
 
     public function setPercentageAction(Request $request) {
         $user_id = $request->request->get('user_id');

@@ -24,19 +24,16 @@ class WorkService {
 	public function getTotalWorkMinutesForMonth($month, $year) {
 		$holidayMinutes = $this->getHolidayMinutesForMonth($month, $year);
 		$weekdayMinutes = $this->getWeekdayMinutesForMonth($month, $year);
-		#echo $weekdayMinutes;
-		#echo $holidayMinutes;
+		
 		return $weekdayMinutes - $holidayMinutes;
-		### OOPS - HUSK Å LASTE INN KALENDER OG TELL ANTALL ARBEIDSDAGER/MINUTTER I MÅNEDEN.
 	}
 
 	public function getHolidayMinutesForMonth($month, $year) {
 		$repo = $this->doctrine->getRepository("UKMTidBundle:Holiday");
 		$holidaysThisMonth = $repo->getHolidays($year, $month);
 
-		if ( ( null == $holidaysThisMonth ) && ( false == $this->options->get('holiday_loaded_'.$year) ) ) {
-			$this->_load_holidays($year);	
-			$holidaysThisMonth = $repo->getHolidays($year, $month);
+		if ( null == $holidaysThisMonth ) {
+			return 0;
 		}	
 
 		// Here we have holidays loaded.
@@ -44,43 +41,33 @@ class WorkService {
 		foreach($holidaysThisMonth as $holiday) {
 			$minutes += $holiday->getTimeOff();
 		}
-		#throw new Exception($minutes);
+
 		return $minutes;
 	}
 
 	public function getWeekdayMinutesForMonth($month, $year ) {
 		$curl = new UKMCURL();
-		#$url = $this->option->get('holiday_url');
 		$result = $curl->process('https://webapi.no/api/v1/calendar/2016');
 
-		#echo '<b>DUMP:</b><br>';
-		#echo 'Month: '.$month.'<br>';
-		#echo 'Year: '.$year.'<br>';
-		#echo '<pre>'.var_export($result->data->months[$month-1]).'</pre>';
-		#echo '<br>';
 		$minutes = 0;
-		#$weekendMinutes = 0;
-		#$numWeekDays = 0;
+		
 		# For alle dager i gitt måned
 		foreach ($result->data->months[$month-1]->days as $day) {
 			# Hvis dagen er helg, hopp over.
 			if ($day->name == "Saturday" || $day->name == "Sunday") {
-				#throw new Exception("Data: ".$day->name);
-				#$weekendMinutes += 450;
 				continue;
 			}
 			# Ellers, tell minuttene herfra. 
 			else {
-				#echo '<br>';
-				#var_dump($day);
 				$minutes += 450; # Full arbeidsdag i minutt; 7.5*60
-				#$numWeekDays++;
 			}
 		}
-		#var_dump($numWeekDays);
-		#throw new Exception("Minutes: ".$minutes);
-		#throw new Exception("WeekendMinutes: ".$weekendMinutes);
+		
 		return $minutes;
+	}
+
+	public function getWeekdaysForMonth($month, $year) {
+		return $this->workdays_in_month($year, $month);
 	}
 
 	public function workdays_in_month($year, $month) {
@@ -100,38 +87,5 @@ class WorkService {
 		return $workdays_in_first_week + ($full_weeks*5) + $workdays_in_last_week;
 	}
 
-	private function _load_holidays( $year ) {
-		$curl = new UKMCURL();
-		#$url = $this->option->get('holiday_url');
-		$result = $curl->process('https://webapi.no/api/v1/holydays/2016');
-
-		$holidays = array();
-		$em = $this->doctrine->getManager();
-		$repo = $this->doctrine->getRepository("UKMTidBundle:Holiday");
-
-		foreach ($result->data as $holiday) {
-			$dato = new DateTime($holiday->date);
-
-			# Sjekk om helligdagen finnes i databasen fra før
-			if ($repo->findOneBy(array("date" => $dato))) {
-				# TODO: Mulig slett eller oppdater data her
-				continue;
-			}
-
-			# Hvis ukedagen er helg (0 = søndag, 6 = lørdag), hopp over.
-			if (0 < $dato->format("w") && $dato->format("w") < 6) {
-				$h = new Holiday();
-				$h->setDate($dato);
-				$h->setMonth($dato->format("n"));
-				$h->setYear($dato->format("Y"));
-				$h->setName($holiday->description);
-
-				$em->persist($h);
-			}
-		}
-
-		$em->flush();
-		## WHEN DONE
-		#$this->options->set('holiday_loaded_'.$year, true);
-	}	
+	
 }

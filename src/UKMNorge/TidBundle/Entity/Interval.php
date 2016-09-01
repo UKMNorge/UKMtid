@@ -43,10 +43,9 @@ class Interval
     /**
      *
      * 
-     * @ORM\Column(name="userid", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="User")
      */
-    private $userid;
-
+    private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="Month", inversedBy="intervals")
@@ -188,40 +187,6 @@ class Interval
     }
 
     /**
-     * Set userid
-     *
-     * @param integer $userid
-     *
-     * @return Interval
-     */
-    public function setUserid($userid)
-    {
-        $this->userid = $userid;
-
-        return $this;
-    }
-
-    /**
-     * Get userid
-     *
-     * @return integer
-     */
-    public function getUserid()
-    {
-        return $this->userid;
-    }
-
-    /**
-     * Get user.
-     *
-     * @return integer
-     */
-    public function getUser()
-    {
-        return new User($this->userid);
-    }
-
-    /**
      * Set month
      *
      * @param \UKMNorge\TidBundle\Entity\Month $month
@@ -252,5 +217,29 @@ class Interval
     public function getLengthInMinutes()
     {
         return (int) ($this->getLengthInSeconds() / 60);
+    }
+
+    /**
+     * Set user
+     *
+     * @param \UKMNorge\TidBundle\Entity\User $user
+     *
+     * @return Interval
+     */
+    public function setUser(\UKMNorge\TidBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \UKMNorge\TidBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }
