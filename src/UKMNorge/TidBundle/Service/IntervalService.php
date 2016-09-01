@@ -28,13 +28,14 @@ class IntervalService {
 
 	// Hent det nyeste intervallet som ikke er stoppet.
 	public function getCurrentInterval(User $user) {
-		return $this->repo->findOneBy(
+		return $this->repo->getCurrentInterval($user);
+		/*return $this->repo->findOneBy(
 			array(
 				"userid" => $user->getId(), 
 				"stop" => null),
 			array(
 				'start' => 'DESC')
-		);
+		);*/
 	}
 
 	public function get($id) {
