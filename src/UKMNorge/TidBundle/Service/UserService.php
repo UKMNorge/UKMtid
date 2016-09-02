@@ -31,22 +31,21 @@ class UserService {
 	    # Hvis dette ikke er deg selv;
 	    if($currentUser->getId() != $id) {
 	    	# og du ikke er enten super-admin;
-	    	if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
-	    		throw $this->container->createAccessDeniedException();
+	    	if ($this->container->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
+	    		$user = $this->repo->findOneBy(array("id" => $id));
+	    		return $user;
 	    	} 
 	    	# Eller department manager for riktig department.
 	    	elseif($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
 	    		// TODO: Sjekk at brukeren er department-leader for brukeren vi prøver å få tak i sin Department.
-	    		throw $this->container->createAccessDeniedException();
+	    		throw new Exception("Denne funksjonaliteten er ikke implementert for Kontorsjefer enda.");
 	    	}
+	    } 
+	    else {
+	    	return $currentUser;
 	    }
-	    try {
-		    $user = $this->repo->findOneBy(array("id" => $id));
-		} catch ( Exception $e ) {
-			throw new Exception('Brukeren finnes ikke:<br>' . $e, 1);
-		}
 		
-		return $user;
+		
 	}
 	
 	// Returnerer et array med Departments
