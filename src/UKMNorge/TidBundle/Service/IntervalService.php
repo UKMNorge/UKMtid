@@ -95,6 +95,19 @@ class IntervalService {
 		return $string;
 	}
 
+	public function getPrettyLengthFlooredHours(Interval $interval) {
+		$length = $this->getLengthInMinutes($interval);
+		$string = '';
+		if($length > 60) {
+			$string = $this->formatter->floorHours($length, true);
+		}
+		if ($length % 60) {
+			$minutes = $this->formatter->minutes($length % 60, true);
+			$string = $string . ' ' . $minutes;
+		}
+		return $string;
+	}
+
 	public function stopInterval(Interval $interval, $year, $month, $day, $hour, $minute) {
 		$stop = new DateTime();
     	$stop->setDate($year, $month, $day);

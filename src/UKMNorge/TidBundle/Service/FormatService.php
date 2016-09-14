@@ -21,6 +21,9 @@ class FormatService {
 		return $this->_time( $minutes, $short ? 'm' : 'minutter');
 	}
 	
+	public function floorHours($minutes, $short = false) {
+		return $this->_time( floor($minutes/60), $short ? 't' : 'timer');
+	}
 	public function hours( $minutes, $precision = 1, $short = false ) {
 		return $this->_time( round($minutes/60, $precision), $short ? 't' : 'timer');
 	}

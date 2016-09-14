@@ -93,7 +93,7 @@
 						<div class="row">
 							<div class="col-xs-2" align="center"><b>{{ iServ.getDayFromInterval(interval) }}</b><br /><small>{{ iServ.getDayNameFromInterval(interval) }}</small></div>
 							<div class="col-xs-7">{{ iServ.getStart(interval)|date("H:i") }} - {{ iServ.isStopped(interval) ? iServ.getStop(interval)|date("H:i") : '' }}</div>
-							<div class="col-xs-3" align="right"><b>{{ iServ.isStopped(interval) ? iServ.getPrettyLength(interval) : '?' }}</b></div>
+							<div class="col-xs-3" align="right"><b>{{ iServ.isStopped(interval) ? iServ.getPrettyLengthFlooredHours(interval) : '?' }}</b></div>
 						</div>
 					</li>
 				{% else %}	
