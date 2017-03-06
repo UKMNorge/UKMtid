@@ -199,7 +199,13 @@ class UserController extends Controller
         $data['stopMonth'] = $month;
         $data['stopYear'] = $year;
         $data['stopHour'] = $iServ->getStopHourFromInterval($interval);
-        $data['stopMinute'] = $iServ->getStopMinuteFromInterval($interval);        
+        $data['stopMinute'] = $iServ->getStopMinuteFromInterval($interval);
+	    if( $data['stopDay'] == null ) {
+		$data['stopDay'] = date('d');
+		$data['stopMonth'] = date('m');
+		$data['stopHour'] = date('H');
+		$data['stopMinute'] = date('i');
+	    }
         return $this->render('UKMTidBundle:User:edit.html.twig', $data);
     }
 
