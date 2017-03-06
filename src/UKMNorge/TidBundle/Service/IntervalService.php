@@ -177,28 +177,45 @@ class IntervalService {
 
 	### GET STOP-stuff
 	public function getStopMinuteFromInterval(Interval $interval) {
+		if( $interval->getStop() == null ) {
+			return date("i");
+		}
 		return date("i", $interval->getStop());
 	}
 
 	public function getStopHourFromInterval(Interval $interval) {
+		if( $interval->getStop() == null ) {
+			return date("H");
+		}		
 		return date("H", $interval->getStop());
 	}
 
 	public function getStopDayFromInterval(Interval $interval) {
-		var_dump ($interval);
+		if( $interval->getStop() == null ) {
+			return date("j");
+		}
 		return date("j", $interval->getStop());
 	}
 
 	// TODO: Fiks fornorsking av dag
 	public function getStopDayNameFromInterval(Interval $interval) {
+		if( $interval->getStop() == null ) {
+			return date("D");
+		}
 		return date("D", $interval->getStop());
 	}
 
 	public function getStopMonthFromInterval(Interval $interval) {
+		if( $interval->getStop() == null ) {
+			return date("n");
+		}
 		return date("n", $interval->getStop());
 	}
 
 	public function getStopYearFromInterval(Interval $interval) {
+		if( $interval->getStop() == null ) {
+			return date("Y");
+		}
 		return date("Y", $interval->getStop());
 	}
 
