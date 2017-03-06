@@ -98,7 +98,7 @@ class IntervalService {
 	public function getPrettyLengthFlooredHours(Interval $interval) {
 		$length = $this->getLengthInMinutes($interval);
 		$string = '';
-		if($length > 60) {
+		if($length >= 60) {
 			$string = $this->formatter->floorHours($length, true);
 		}
 		if ($length % 60) {
