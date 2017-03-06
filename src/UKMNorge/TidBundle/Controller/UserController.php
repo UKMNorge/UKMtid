@@ -200,6 +200,7 @@ class UserController extends Controller
         $data['stopYear'] = $year;
         $data['stopHour'] = $iServ->getStopHourFromInterval($interval);
         $data['stopMinute'] = $iServ->getStopMinuteFromInterval($interval);
+	    var_dump( $data['stopDay'] ); var_dump( $data );
 	    if( $data['stopDay'] == null ) {
 		$data['stopDay'] = date('d');
 		$data['stopMonth'] = date('m');
