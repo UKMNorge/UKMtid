@@ -185,6 +185,7 @@ class IntervalService {
 	}
 
 	public function getStopDayFromInterval(Interval $interval) {
+		var_dump ($interval);
 		return date("j", $interval->getStop());
 	}
 
