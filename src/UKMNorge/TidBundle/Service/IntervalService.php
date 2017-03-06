@@ -251,7 +251,9 @@ class IntervalService {
 	// TODO: Sett år som skal være tilgjengelig.
 	public function getAvailableYears() {
 		$years = array();
-		$years[] = 2016;
+		for( $i=2016; $i<(int)date('Y')+1; $i++ ) {
+			$years[] = $i;
+		}
 		return $years;
 	}
 
